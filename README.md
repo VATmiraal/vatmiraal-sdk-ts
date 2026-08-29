@@ -24,7 +24,8 @@ bun add @vatmiraal/sdk
 
 ## Getting started
 
-Create a client with an API token, then call an operation with it. Every operation resolves to
+Create a client, authenticating with an API token or browser credentials (see
+[Authentication](#authentication)), then call an operation with it. Every operation resolves to
 a `Result`: a value on success, or an `Error` on failure.
 
 ```ts
