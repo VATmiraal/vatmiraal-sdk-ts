@@ -6,8 +6,6 @@ import type {
 	TransportBy
 } from '../common/domain-types';
 
-export type { TransportBy };
-
 /**
  * A property set on a party or object: a name and its positional arguments.
  *
