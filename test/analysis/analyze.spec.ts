@@ -20,7 +20,7 @@ const request: TaxGridAnalysisRequest = {
 
 describe(analyzeTaxGrid.name, () => {
 	it('POSTs the request to /tax-grid-analysis and parses the response', async () => {
-		const response = { grids: [], warnings: [], inconsistencies: [] };
+		const response = { status: 'consistent', grids: [], warnings: [] };
 		const send = vi.fn().mockResolvedValue(result(new Response(JSON.stringify(response))));
 		const client: Client = { options: { token: 't' }, request: send };
 

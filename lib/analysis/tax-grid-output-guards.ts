@@ -71,13 +71,14 @@ export function isWarning(value: unknown): value is Warning {
 }
 
 export function isTaxGridAnalysisResponse(value: unknown): value is TaxGridAnalysisResponse {
-	return (
-		isRecord(value) &&
-		isUnknownArray(value.grids) &&
-		value.grids.every(isTaxGridResult) &&
-		isUnknownArray(value.warnings) &&
-		value.warnings.every(isWarning) &&
-		isUnknownArray(value.inconsistencies) &&
-		value.inconsistencies.every(isWarning)
-	);
+	if (!isRecord(value) || !isUnknownArray(value.warnings) || !value.warnings.every(isWarning)) {
+		return false;
+	}
+	if (value.status === 'consistent') {
+		return isUnknownArray(value.grids) && value.grids.every(isTaxGridResult);
+	}
+	if (value.status === 'inconsistent') {
+		return isUnknownArray(value.inconsistencies) && value.inconsistencies.every(isWarning);
+	}
+	return false;
 }

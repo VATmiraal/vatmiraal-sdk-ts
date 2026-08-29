@@ -103,6 +103,20 @@ const res = await analyzeTaxGrid(client, {
 });
 ```
 
+The result is a union on `status`: a `consistent` result carries the `grids`, an `inconsistent`
+one carries the `inconsistencies` that stopped the analysis. Both carry any `warnings`. Narrow on
+`status` to read the right fields:
+
+```ts
+if (!isError(res)) {
+	if (res.value.status === 'consistent') {
+		res.value.grids; // the VAT grids the transaction maps to
+	} else {
+		res.value.inconsistencies; // why the analysis stopped
+	}
+}
+```
+
 ### VAT number validation
 
 ```ts

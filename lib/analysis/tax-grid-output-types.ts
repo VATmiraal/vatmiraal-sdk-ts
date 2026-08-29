@@ -45,9 +45,11 @@ export interface Warning {
 	justification: string;
 }
 
-/** The full tax-grid-analysis response: the grids plus the issues raised about them. */
-export interface TaxGridAnalysisResponse {
-	grids: TaxGridResult[];
-	warnings: Warning[];
-	inconsistencies: Warning[];
-}
+/**
+ * The tax-grid-analysis result, distinguished by `status`. A `consistent` result carries the
+ * grids the transaction maps to; an `inconsistent` result carries the inconsistencies that
+ * halted the analysis, with no grids. Both carry any warnings raised about the transaction.
+ */
+export type TaxGridAnalysisResponse =
+	| { status: 'consistent'; grids: TaxGridResult[]; warnings: Warning[] }
+	| { status: 'inconsistent'; inconsistencies: Warning[]; warnings: Warning[] };

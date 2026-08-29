@@ -41,10 +41,16 @@ const warning: Warning = {
 	justification: 'A warning.'
 };
 
-const response: TaxGridAnalysisResponse = {
+const consistent: TaxGridAnalysisResponse = {
+	status: 'consistent',
 	grids: [taxGrid],
-	warnings: [warning],
-	inconsistencies: []
+	warnings: [warning]
+};
+
+const inconsistent: TaxGridAnalysisResponse = {
+	status: 'inconsistent',
+	inconsistencies: [warning],
+	warnings: []
 };
 
 describe(isRecord.name, () => {
@@ -155,25 +161,48 @@ describe(isWarning.name, () => {
 });
 
 describe(isTaxGridAnalysisResponse.name, () => {
-	it('accepts a full, well-formed response', () => {
-		expect(isTaxGridAnalysisResponse(response)).toBe(true);
+	it('accepts a consistent result', () => {
+		expect(isTaxGridAnalysisResponse(consistent)).toBe(true);
 	});
 
-	it('rejects a response missing warnings', () => {
-		expect(isTaxGridAnalysisResponse({ grids: [taxGrid], inconsistencies: [] })).toBe(false);
-	});
-
-	it('rejects a response missing inconsistencies', () => {
-		expect(isTaxGridAnalysisResponse({ grids: [taxGrid], warnings: [] })).toBe(false);
-	});
-
-	it('rejects a response with a malformed grid', () => {
-		expect(
-			isTaxGridAnalysisResponse({ grids: [{ grid: '81' }], warnings: [], inconsistencies: [] })
-		).toBe(false);
+	it('accepts an inconsistent result', () => {
+		expect(isTaxGridAnalysisResponse(inconsistent)).toBe(true);
 	});
 
 	it('rejects a non-object', () => {
 		expect(isTaxGridAnalysisResponse(null)).toBe(false);
+	});
+
+	it('rejects missing or malformed warnings', () => {
+		expect(isTaxGridAnalysisResponse({ status: 'consistent', grids: [] })).toBe(false);
+		expect(isTaxGridAnalysisResponse({ status: 'consistent', grids: [], warnings: [{}] })).toBe(
+			false
+		);
+	});
+
+	it('rejects an unknown status', () => {
+		expect(isTaxGridAnalysisResponse({ status: 'other', warnings: [] })).toBe(false);
+	});
+
+	it('rejects a consistent result with malformed grids', () => {
+		expect(isTaxGridAnalysisResponse({ status: 'consistent', warnings: [], grids: 'nope' })).toBe(
+			false
+		);
+		expect(
+			isTaxGridAnalysisResponse({ status: 'consistent', warnings: [], grids: [{ grid: '81' }] })
+		).toBe(false);
+	});
+
+	it('rejects an inconsistent result with malformed inconsistencies', () => {
+		expect(
+			isTaxGridAnalysisResponse({ status: 'inconsistent', warnings: [], inconsistencies: 'nope' })
+		).toBe(false);
+		expect(
+			isTaxGridAnalysisResponse({
+				status: 'inconsistent',
+				warnings: [],
+				inconsistencies: [{ type: 'x' }]
+			})
+		).toBe(false);
 	});
 });
