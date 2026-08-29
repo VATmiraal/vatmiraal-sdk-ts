@@ -14,7 +14,10 @@ export interface TokenOptions extends CommonOptions {
 
 /** Authenticate with an OAuth session cookie, sent by setting the request credentials mode. */
 export interface OAuthOptions extends CommonOptions {
-	/** Credentials mode used to send the session cookie. Use `'include'`. */
+	/**
+	 * How the browser attaches cookies to each request. Set to `'include'`: the service is a
+	 * different origin, and the session cookie is only sent when credentials are included.
+	 */
 	credentials: RequestInit['credentials'];
 	token?: never;
 }
