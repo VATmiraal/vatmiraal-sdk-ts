@@ -5,9 +5,9 @@
  * so they cannot be pinned to string-literal unions at compile time. They are modelled as
  * `string`, and a value can only be confirmed valid at runtime against the vocabulary the API
  * reports (loaded through the schema module). The plain interfaces are typed with these enums
- * but do not themselves enforce the contract; to enforce it, use the validating classes and
- * type guards this library provides to check a value, or a whole interface, against the
- * current vocabulary.
+ * but do not themselves enforce the contract; to enforce it, use the validating factories and
+ * type guards this library provides to check a value, or a whole interface, against the current
+ * vocabulary, yielding a {@link Safe} value that is guaranteed to hold only valid vocabulary.
  *
  * @module
  */
