@@ -4,7 +4,7 @@ import { result } from 'result-interface';
 import type { Client } from '../../lib/client/types';
 import { inferObject } from '../../lib/inference/inference';
 
-describe('inferObject', () => {
+describe(inferObject.name, () => {
 	it('POSTs the description to /inference/object and parses the candidates', async () => {
 		const out = { candidates: [] };
 		const send = vi.fn().mockResolvedValue(result(new Response(JSON.stringify(out))));

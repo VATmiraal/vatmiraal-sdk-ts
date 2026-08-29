@@ -13,7 +13,7 @@ function clientReturning(body: unknown): { client: Client; send: ReturnType<type
 	return { client: { options: { token: 't' }, request: send }, send };
 }
 
-describe('validateVat', () => {
+describe(validateVat.name, () => {
 	it('POSTs the input to /vat-validation', async () => {
 		const out = { valid: false, invalid_context: ['bad'] };
 		const { client, send } = clientReturning(out);
@@ -29,7 +29,7 @@ describe('validateVat', () => {
 	});
 });
 
-describe('fetchVatTemplates', () => {
+describe(fetchVatTemplates.name, () => {
 	it('GETs /vat-template', async () => {
 		const templates = [{ country: 'belgium', country_code: 'BE', template: 'BE0999999999' }];
 		const { client, send } = clientReturning(templates);
@@ -39,7 +39,7 @@ describe('fetchVatTemplates', () => {
 	});
 });
 
-describe('fetchVatTemplate', () => {
+describe(fetchVatTemplate.name, () => {
 	it('GETs /vat-template/{country}, url-encoding the country', async () => {
 		const template = { country: 'belgium', country_code: 'BE', template: 'BE0999999999' };
 		const { client, send } = clientReturning(template);

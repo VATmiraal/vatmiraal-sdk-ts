@@ -43,12 +43,12 @@ function schemaClient(failPath?: string): Client {
 	return { options: { token: 't' }, request: send };
 }
 
-describe('fetchSchema', () => {
+describe(fetchSchema.name, () => {
 	it('aggregates every vocabulary into a VatSchema', async () => {
 		expect(await fetchSchema(schemaClient())).toBeResult(VAT_SCHEMA);
 	});
 
-	it.each(Object.keys(GOOD))('fails with the first endpoint that errors (%s)', async (failPath) => {
+	it.each(Object.keys(GOOD))('fails when the %s endpoint errors', async (failPath) => {
 		expect(await fetchSchema(schemaClient(failPath))).toBeError();
 	});
 

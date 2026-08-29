@@ -21,7 +21,7 @@ const category = {
 	properties: ['p']
 };
 
-describe('isStringArray', () => {
+describe(isStringArray.name, () => {
 	it('accepts arrays of strings', () => {
 		expect(isStringArray([])).toBe(true);
 		expect(isStringArray(['a', 'b'])).toBe(true);
@@ -32,7 +32,7 @@ describe('isStringArray', () => {
 	});
 });
 
-describe('isBroadCategoryRef', () => {
+describe(isBroadCategoryRef.name, () => {
 	it('accepts a well-formed ref', () => {
 		expect(isBroadCategoryRef(ref)).toBe(true);
 	});
@@ -43,7 +43,7 @@ describe('isBroadCategoryRef', () => {
 	});
 });
 
-describe('isObjectCategory', () => {
+describe(isObjectCategory.name, () => {
 	it('accepts a well-formed category', () => {
 		expect(isObjectCategory(category)).toBe(true);
 	});
@@ -58,7 +58,7 @@ describe('isObjectCategory', () => {
 	});
 });
 
-describe('isPropertyArg', () => {
+describe(isPropertyArg.name, () => {
 	it('accepts args with and without the optional fields', () => {
 		expect(isPropertyArg(arg)).toBe(true);
 		expect(
@@ -76,7 +76,7 @@ describe('isPropertyArg', () => {
 	});
 });
 
-describe('isPropertySpec', () => {
+describe(isPropertySpec.name, () => {
 	it('accepts a well-formed spec', () => {
 		expect(isPropertySpec(spec)).toBe(true);
 	});

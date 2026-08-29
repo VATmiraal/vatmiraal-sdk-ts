@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { mustBeOneOf, mustBeDate, mustBeNonNegative } from '../../../lib/common/safe/check';
 import type { ValidationError } from '../../../lib/common/safe/errors';
 
-describe('mustBeOneOf', () => {
+describe(mustBeOneOf.name, () => {
 	it('appends nothing when the value is allowed', () => {
 		const errors: ValidationError[] = [];
 		mustBeOneOf('a', 'field', ['a', 'b'], 'a or b', errors);
@@ -15,7 +15,7 @@ describe('mustBeOneOf', () => {
 	});
 });
 
-describe('mustBeDate', () => {
+describe(mustBeDate.name, () => {
 	it('accepts a YYYY-MM-DD string', () => {
 		const errors: ValidationError[] = [];
 		mustBeDate('2026-01-01', 'when', errors);
@@ -28,7 +28,7 @@ describe('mustBeDate', () => {
 	});
 });
 
-describe('mustBeNonNegative', () => {
+describe(mustBeNonNegative.name, () => {
 	it('accepts zero and positive numbers', () => {
 		const errors: ValidationError[] = [];
 		mustBeNonNegative(0, 'amount', errors);

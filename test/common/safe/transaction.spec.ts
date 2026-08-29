@@ -5,7 +5,7 @@ import { schema, validRequest } from './fixtures';
 
 const valid = () => validRequest().transaction;
 
-describe('transaction', () => {
+describe(transaction.name, () => {
 	it('returns the validated transaction when valid', () => {
 		const input = valid();
 		expect(transaction(input, schema)).toBeResult(input);
@@ -27,7 +27,7 @@ describe('transaction', () => {
 	});
 });
 
-describe('isSafeTransaction', () => {
+describe(isSafeTransaction.name, () => {
 	it('narrows valid transactions and rejects invalid ones', () => {
 		expect(isSafeTransaction(valid(), schema)).toBe(true);
 		expect(isSafeTransaction({ ...valid(), taxable_amount: -1 }, schema)).toBe(false);

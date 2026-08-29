@@ -8,7 +8,7 @@ import {
 import type { ValidationError } from '../../../lib/common/safe/errors';
 import { schema, validRequest } from './fixtures';
 
-describe('taxGridAnalysisRequest', () => {
+describe(taxGridAnalysisRequest.name, () => {
 	it('returns the validated request when valid', () => {
 		const input = validRequest();
 		expect(taxGridAnalysisRequest(input, schema)).toBeResult(input);
@@ -26,7 +26,7 @@ describe('taxGridAnalysisRequest', () => {
 	});
 });
 
-describe('validateTaxGridAnalysisRequest', () => {
+describe(validateTaxGridAnalysisRequest.name, () => {
 	it('prefixes failures with the given path when nested', () => {
 		const input = validRequest();
 		input.perspective = 'auditor' as typeof input.perspective;
@@ -41,7 +41,7 @@ describe('validateTaxGridAnalysisRequest', () => {
 	});
 });
 
-describe('isSafeTaxGridAnalysisRequest', () => {
+describe(isSafeTaxGridAnalysisRequest.name, () => {
 	it('narrows valid requests and rejects invalid ones', () => {
 		expect(isSafeTaxGridAnalysisRequest(validRequest(), schema)).toBe(true);
 		const bad = validRequest();

@@ -9,7 +9,7 @@ const valid = (): AnalysisObject => ({
 	properties: []
 });
 
-describe('analysisObject', () => {
+describe(analysisObject.name, () => {
 	it('returns the validated object when valid', () => {
 		const input = valid();
 		expect(analysisObject(input, schema)).toBeResult(input);
@@ -35,7 +35,7 @@ describe('analysisObject', () => {
 	});
 });
 
-describe('isSafeAnalysisObject', () => {
+describe(isSafeAnalysisObject.name, () => {
 	it('narrows valid objects and rejects invalid ones', () => {
 		expect(isSafeAnalysisObject(valid(), schema)).toBe(true);
 		expect(isSafeAnalysisObject({ ...valid(), type: 'spaceship' }, schema)).toBe(false);

@@ -7,7 +7,7 @@ import {
 
 const template = { country: 'belgium', country_code: 'BE', template: 'BE0999999999' };
 
-describe('isVatValidationOutput', () => {
+describe(isVatValidationOutput.name, () => {
 	it('accepts the minimal and the fully-populated shapes', () => {
 		expect(isVatValidationOutput({ valid: true })).toBe(true);
 		expect(
@@ -22,7 +22,7 @@ describe('isVatValidationOutput', () => {
 	});
 });
 
-describe('isVatTemplate', () => {
+describe(isVatTemplate.name, () => {
 	it('accepts a well-formed template', () => {
 		expect(isVatTemplate(template)).toBe(true);
 	});
@@ -34,7 +34,7 @@ describe('isVatTemplate', () => {
 	});
 });
 
-describe('isVatTemplateArray', () => {
+describe(isVatTemplateArray.name, () => {
 	it('accepts arrays of templates and rejects others', () => {
 		expect(isVatTemplateArray([template])).toBe(true);
 		expect(isVatTemplateArray([])).toBe(true);

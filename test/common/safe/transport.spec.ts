@@ -11,7 +11,7 @@ const valid = (): Transport => ({
 	proof_of_transport: true
 });
 
-describe('transport', () => {
+describe(transport.name, () => {
 	it('returns the validated transport when every field is known', () => {
 		const input = valid();
 		expect(transport(input, schema)).toBeResult(input);
@@ -23,7 +23,7 @@ describe('transport', () => {
 	});
 });
 
-describe('isSafeTransport', () => {
+describe(isSafeTransport.name, () => {
 	it('narrows valid transports and rejects invalid ones', () => {
 		expect(isSafeTransport(valid(), schema)).toBe(true);
 		expect(isSafeTransport({ ...valid(), by: 'carrier_pigeon' }, schema)).toBe(false);

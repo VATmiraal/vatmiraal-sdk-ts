@@ -17,7 +17,7 @@ function clientReturning(res: Response | Error): Client {
 const isNumberArray = (v: unknown): v is number[] =>
 	Array.isArray(v) && v.every((n) => typeof n === 'number');
 
-describe('requestJson', () => {
+describe(requestJson.name, () => {
 	it('parses and guards an ok JSON body', async () => {
 		const client = clientReturning(new Response(JSON.stringify([1, 2, 3]), { status: 200 }));
 		expect(await requestJson(client, '/x', isNumberArray)).toBeResult([1, 2, 3]);

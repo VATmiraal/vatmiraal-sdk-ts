@@ -6,7 +6,7 @@ import { schema } from './fixtures';
 
 const valid = (): Party => ({ type: 'company', country: 'belgium', properties: [] });
 
-describe('party', () => {
+describe(party.name, () => {
 	it('returns the validated party when valid', () => {
 		const input = valid();
 		expect(party(input, schema)).toBeResult(input);
@@ -18,7 +18,7 @@ describe('party', () => {
 	});
 });
 
-describe('isSafeParty', () => {
+describe(isSafeParty.name, () => {
 	it('narrows valid parties and rejects invalid ones', () => {
 		expect(isSafeParty(valid(), schema)).toBe(true);
 		expect(isSafeParty({ ...valid(), type: 'wizard' }, schema)).toBe(false);

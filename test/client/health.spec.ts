@@ -4,7 +4,7 @@ import { result } from 'result-interface';
 import type { Client } from '../../lib/client/types';
 import { ping } from '../../lib/client/health';
 
-describe('ping', () => {
+describe(ping.name, () => {
 	it('GETs / and returns the alive boolean', async () => {
 		const send = vi.fn().mockResolvedValue(result(new Response(JSON.stringify({ alive: true }))));
 		const client: Client = { options: { token: 't' }, request: send };

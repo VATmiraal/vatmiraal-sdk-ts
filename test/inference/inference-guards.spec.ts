@@ -13,7 +13,7 @@ const candidate = {
 
 const wrap = (c: unknown) => ({ candidates: [c] });
 
-describe('isInferenceResult', () => {
+describe(isInferenceResult.name, () => {
 	it('accepts a well-formed result', () => {
 		expect(isInferenceResult({ candidates: [candidate] })).toBe(true);
 		expect(isInferenceResult({ candidates: [] })).toBe(true);
