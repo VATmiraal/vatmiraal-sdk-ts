@@ -1,0 +1,53 @@
+{
+	"name": "@vatmiraal/sdk",
+	"version": "0.1.0",
+	"description": "TypeScript and JavaScript client SDK for the VATmiraal API.",
+	"author": "VATmiraal LLC",
+	"license": "Apache-2.0",
+	"type": "module",
+	"publishConfig": {
+		"access": "public"
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"unpkg": "./dist/browser/vatmiraal-sdk.global.js",
+	"jsdelivr": "./dist/browser/vatmiraal-sdk.global.js",
+	"sideEffects": false,
+	"files": [
+		"dist",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "tsup",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"lint": "prettier --check . && eslint .",
+		"format": "prettier --write .",
+		"docs": "typedoc"
+	},
+	"dependencies": {
+		"result-interface": "^2.4.1"
+	},
+	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"@types/bun": "latest",
+		"@vitest/coverage-v8": "^4.1.11",
+		"eslint": "^10.9.1",
+		"eslint-config-prettier": "^10.1.8",
+		"prettier": "^3.9.6",
+		"tsup": "^8.5.1",
+		"typedoc": "^0.28.20",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.68.0",
+		"vitest": "^4.1.11"
+	}
+}
