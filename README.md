@@ -10,8 +10,14 @@ TypeScript and JavaScript client for the VATmiraal API.
 
 ## Installation
 
+Install with any JavaScript package manager:
+
 ```bash
 npm install @vatmiraal/sdk
+# or
+yarn add @vatmiraal/sdk
+# or
+pnpm add @vatmiraal/sdk
 # or
 bun add @vatmiraal/sdk
 ```
