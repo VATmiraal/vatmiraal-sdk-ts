@@ -178,6 +178,25 @@ The parts can be validated on their own with `transaction`, `party`, `analysisOb
 `transport`, and each has a matching type guard (`isSafeTaxGridAnalysisRequest`, `isSafeParty`,
 and so on).
 
+## Detecting API drift
+
+The types are written against a fixed set of endpoints. To confirm the running service still
+exposes them, check every endpoint the SDK calls against the live OpenAPI document:
+
+```ts
+import { checkEndpointDrift } from '@vatmiraal/sdk';
+import { isError } from 'result-interface';
+
+const drift = await checkEndpointDrift(client);
+if (!isError(drift) && !drift.value.ok) {
+	console.warn('endpoints missing from the service:', drift.value.missing);
+}
+```
+
+`checkEndpointDrift` returns `{ ok, missing }`, where `missing` lists any endpoint, by method and
+path, the service no longer declares. `fetchOpenApi(client)` returns the raw document to inspect
+yourself. Use either as a startup preflight or in CI against a deployed environment.
+
 ## Browser
 
 The client runs in any modern browser. For a script tag, load the bundle from a CDN and use the

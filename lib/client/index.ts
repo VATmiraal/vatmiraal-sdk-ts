@@ -3,3 +3,8 @@ export type { Client, OAuthOptions, TokenOptions, VatmiraalClientOptions } from 
 export { ApiError, isApiErrorBody } from './api-error';
 export type { ApiErrorBody } from './api-error';
 export { ping } from './health';
+export { fetchOpenApi } from './openapi';
+export type { OpenApiDocument } from './openapi';
+export { checkEndpointDrift } from './drift';
+export type { DriftReport, DriftEntry } from './drift';
+export type { HttpMethod } from './endpoints';
