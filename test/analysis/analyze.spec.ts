@@ -13,7 +13,7 @@ const request: TaxGridAnalysisRequest = {
 		vat_amount: 21,
 		supplier: { type: 'company', country: 'belgium', properties: [] },
 		receiver: { type: 'company', country: 'belgium', properties: [] },
-		object: { classification: 'consulting', type: 'general_service', properties: [] }
+		object: { type: 'general_service', properties: [] }
 	},
 	perspective: 'supplier'
 };

@@ -90,7 +90,7 @@ const res = await analyzeTaxGrid(client, {
 		vat_amount: 21,
 		supplier: { type: 'company', country: 'belgium', properties: [] },
 		receiver: { type: 'company', country: 'france', properties: [] },
-		object: { classification: 'consulting', type: 'general_service', properties: [] }
+		object: { type: 'general_service', properties: [] }
 	},
 	perspective: 'supplier'
 });

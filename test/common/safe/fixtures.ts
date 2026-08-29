@@ -32,7 +32,6 @@ export function validRequest(): TaxGridAnalysisRequest {
 			supplier: { type: 'company', country: 'belgium', properties: [] },
 			receiver: { type: 'company', country: 'france', properties: [] },
 			object: {
-				classification: 'consulting',
 				type: 'general_service',
 				properties: [],
 				transport: {

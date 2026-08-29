@@ -5,7 +5,6 @@ import type { AnalysisObject } from '../../../lib/analysis/tax-grid-input-types'
 import { schema } from './fixtures';
 
 const valid = (): AnalysisObject => ({
-	classification: 'consulting',
 	type: 'general_service',
 	properties: []
 });

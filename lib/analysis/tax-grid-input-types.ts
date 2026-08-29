@@ -45,8 +45,6 @@ export interface Party {
 
 /** The good or service being transacted. */
 export interface AnalysisObject {
-	/** Free-form label describing the object, e.g. `'consulting'`. */
-	classification: string;
 	/** The object's category. */
 	type: ObjectType;
 	/** Optional properties qualifying the object. */
