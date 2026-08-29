@@ -1,5 +1,9 @@
 # @vatmiraal/vatmiraal-sdk
 
+[![npm](https://img.shields.io/npm/v/@vatmiraal/vatmiraal-sdk)](https://www.npmjs.com/package/@vatmiraal/vatmiraal-sdk)
+[![docs](https://img.shields.io/badge/docs-typedoc-blue)](https://vatmiraal.github.io/vatmiraal-sdk-ts/)
+[![license](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
+
 TypeScript and JavaScript client for the VATmiraal API.
 
 - Typing that mirrors the API, with runtime type guards for every response.
