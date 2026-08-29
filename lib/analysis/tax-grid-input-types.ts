@@ -19,7 +19,7 @@ export interface AnalysisProperty {
 	args: (string | number | boolean)[];
 }
 
-/** Cross-border movement of the transacted object. */
+/** Transport of an object. */
 export interface Transport {
 	/** Country the object is transported from. */
 	from: Country;
