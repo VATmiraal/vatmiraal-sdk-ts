@@ -14,8 +14,7 @@ export function validateProperties(
 	path: string,
 	errors: ValidationError[]
 ): void {
-	for (let i = 0; i < props.length; i++) {
-		const prop = props[i];
+	for (const [i, prop] of props.entries()) {
 		const at = `${path}[${i}]`;
 		const spec = specs.find((s) => s.value === prop.type);
 		if (spec === undefined) {
@@ -29,8 +28,8 @@ export function validateProperties(
 			});
 			continue;
 		}
-		for (let j = 0; j < spec.args.length; j++) {
-			validateArg(prop.args[j], spec.args[j], schema, `${at}.args[${j}]`, errors);
+		for (const [j, argSpec] of spec.args.entries()) {
+			validateArg(prop.args[j], argSpec, schema, `${at}.args[${j}]`, errors);
 		}
 	}
 }
