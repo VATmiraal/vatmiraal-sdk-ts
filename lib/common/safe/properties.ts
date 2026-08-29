@@ -14,24 +14,25 @@ export function validateProperties(
 	path: string,
 	errors: ValidationError[]
 ): void {
-	props.forEach((prop, i) => {
+	for (let i = 0; i < props.length; i++) {
+		const prop = props[i];
 		const at = `${path}[${i}]`;
 		const spec = specs.find((s) => s.value === prop.type);
 		if (spec === undefined) {
 			errors.push({ path: `${at}.type`, message: `unknown property '${prop.type}'` });
-			return;
+			continue;
 		}
 		if (prop.args.length !== spec.args.length) {
 			errors.push({
 				path: `${at}.args`,
 				message: `expected ${spec.args.length} argument(s), got ${prop.args.length}`
 			});
-			return;
+			continue;
 		}
-		spec.args.forEach((argSpec, j) => {
-			validateArg(prop.args[j], argSpec, schema, `${at}.args[${j}]`, errors);
-		});
-	});
+		for (let j = 0; j < spec.args.length; j++) {
+			validateArg(prop.args[j], spec.args[j], schema, `${at}.args[${j}]`, errors);
+		}
+	}
 }
 
 /** A domain that accepts a value from a fixed set (`oneof`, `country`, ...). */
