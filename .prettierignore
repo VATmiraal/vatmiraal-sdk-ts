@@ -1,0 +1,7 @@
+dist/
+docs/
+coverage/
+node_modules/
+.claude/
+bun.lock
+CLAUDE.md
