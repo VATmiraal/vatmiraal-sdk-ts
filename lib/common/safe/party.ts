@@ -14,7 +14,7 @@ export function party(input: Party, schema: VatSchema): Result<Safe<Party>, Vali
 	return errors.length > 0 ? error(errors) : result(asSafe(input));
 }
 
-/** A boolean guard reusing {@link validateParty}; narrows `input` to `Safe<Party>` when valid. */
+/** A boolean-guard form of {@link party}; narrows `input` to `Safe<Party>` when valid. */
 export function isSafeParty(input: DeepReadonly<Party>, schema: VatSchema): input is Safe<Party> {
 	const errors: ValidationError[] = [];
 	validateParty(input, schema, '', errors);

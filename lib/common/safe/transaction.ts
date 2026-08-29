@@ -18,7 +18,7 @@ export function transaction(
 	return errors.length > 0 ? error(errors) : result(asSafe(input));
 }
 
-/** A boolean guard reusing {@link validateTransaction}; narrows `input` when valid. */
+/** A boolean-guard form of {@link transaction}; narrows `input` when valid. */
 export function isSafeTransaction(
 	input: DeepReadonly<VatmiraalAnalysisInput>,
 	schema: VatSchema

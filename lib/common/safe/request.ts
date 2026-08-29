@@ -19,7 +19,7 @@ export function taxGridAnalysisRequest(
 	return errors.length > 0 ? error(errors) : result(asSafe(input));
 }
 
-/** A boolean guard reusing {@link validateTaxGridAnalysisRequest}; narrows `input` when valid. */
+/** A boolean-guard form of {@link taxGridAnalysisRequest}; narrows `input` when valid. */
 export function isSafeTaxGridAnalysisRequest(
 	input: DeepReadonly<TaxGridAnalysisRequest>,
 	schema: VatSchema

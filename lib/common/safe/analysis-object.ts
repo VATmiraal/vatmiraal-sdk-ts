@@ -18,7 +18,7 @@ export function analysisObject(
 	return errors.length > 0 ? error(errors) : result(asSafe(input));
 }
 
-/** A boolean guard reusing {@link validateAnalysisObject}; narrows `input` when valid. */
+/** A boolean-guard form of {@link analysisObject}; narrows `input` when valid. */
 export function isSafeAnalysisObject(
 	input: DeepReadonly<AnalysisObject>,
 	schema: VatSchema

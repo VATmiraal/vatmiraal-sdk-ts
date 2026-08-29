@@ -16,7 +16,7 @@ export function transport(
 	return errors.length > 0 ? error(errors) : result(asSafe(input));
 }
 
-/** A boolean guard reusing {@link validateTransport}; narrows `input` to `Safe<Transport>`. */
+/** A boolean-guard form of {@link transport}; narrows `input` to `Safe<Transport>`. */
 export function isSafeTransport(
 	input: DeepReadonly<Transport>,
 	schema: VatSchema

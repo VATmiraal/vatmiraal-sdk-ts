@@ -5,7 +5,7 @@
  * value on success; each `isSafe*` guard narrows a value to its `Safe` form. This is where the
  * enums modelled as `string` are confirmed against the vocabulary the API reports.
  *
- * @module
+ * @module safe
  */
 
 export type { DeepReadonly, Safe } from './safe';
