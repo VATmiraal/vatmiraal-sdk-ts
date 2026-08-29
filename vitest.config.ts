@@ -7,6 +7,7 @@ export default defineConfig({
 		coverage: {
 			provider: 'v8',
 			include: ['lib/**'],
+			exclude: ['lib/generated/**'],
 			thresholds: {
 				statements: 100,
 				branches: 100,

@@ -32,7 +32,8 @@
 		"test:watch": "vitest",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
-		"docs": "typedoc"
+		"docs": "typedoc",
+		"gen:api": "openapi-typescript test/fixtures/openapi.json -o lib/generated/api.ts"
 	},
 	"dependencies": {
 		"result-interface": "^2.4.1"
@@ -43,6 +44,7 @@
 		"@vitest/coverage-v8": "^4.1.11",
 		"eslint": "^10.9.1",
 		"eslint-config-prettier": "^10.1.8",
+		"openapi-typescript": "^7.13.0",
 		"prettier": "^3.9.6",
 		"tsup": "^8.5.1",
 		"typedoc": "^0.28.20",

@@ -1,6 +1,8 @@
 dist/
 docs/
 coverage/
+lib/generated/
+test/fixtures/
 node_modules/
 .claude/
 bun.lock
