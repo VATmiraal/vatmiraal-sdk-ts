@@ -1,0 +1,35 @@
+{
+	"port": 8080,
+	"model": {
+		"timeout": 120,
+		"character_limit": 2000,
+		"models": [{ "id": "qwen2.5:0.5b", "address": "http://ollama:11434/v1", "api_key": "" }]
+	},
+	"path_neural_module": "neural_module",
+	"auth": {
+		"oauth": {
+			"enabled": false,
+			"user_kb_path": "kb/storage/dev_user.pl",
+			"manager_kb_path": "kb/storage/manager.pl"
+		},
+		"token": { "enabled": true, "kb_path": "kb/storage/dev_token.pl" },
+		"oidc": { "enabled": false, "issuer": "", "audience": "" },
+		"dashboard": {
+			"enabled": false,
+			"managers": [],
+			"user_history_kb_path": "kb/storage/user_history.pl",
+			"token_history_kb_path": "kb/storage/token_history.pl",
+			"manager_history_kb_path": "kb/storage/manager_history.pl"
+		}
+	},
+	"request_log": {
+		"enabled": false,
+		"db_path": "kb/storage/requests.dev.db",
+		"encryption_key": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff",
+		"exclude_token_emails": []
+	},
+	"llm_settings": {
+		"kb_path": "kb/storage/llm_settings.dev.pl",
+		"encryption_key": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
+	}
+}

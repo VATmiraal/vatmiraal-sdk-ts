@@ -40,7 +40,7 @@ function schemaClient(failPath?: string): Client {
 			result(new Response(ok ? JSON.stringify(GOOD[path]) : '', { status: ok ? 200 : 500 }))
 		);
 	});
-	return { options: { token: 't' }, request: send };
+	return { options: { token: 't' }, routes: [], request: send };
 }
 
 describe(fetchSchema.name, () => {
@@ -54,7 +54,7 @@ describe(fetchSchema.name, () => {
 
 	it('fails when the underlying requests reject', async () => {
 		const send = vi.fn().mockRejectedValue(new Error('network down'));
-		const client: Client = { options: { token: 't' }, request: send };
+		const client: Client = { options: { token: 't' }, routes: [], request: send };
 
 		expect(await fetchSchema(client)).toBeError();
 	});

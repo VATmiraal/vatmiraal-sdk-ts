@@ -8,6 +8,7 @@ import { ApiError } from '../../lib/client/api-error';
 function clientReturning(res: Response | Error): Client {
 	return {
 		options: { token: 't' },
+		routes: [],
 		request(): SafePromise<Response, Error> {
 			return Promise.resolve(res instanceof Error ? error(res) : result(res));
 		}
