@@ -30,7 +30,7 @@ services:
     build: git@github.com:VATmiraal/vatmiraal-services.git#main
     command: ['-configPath', 'config.json']
     ports:
-      - '18080:8080'
+      - '8468:8080'
     depends_on:
       ollama-pull:
         condition: service_completed_successfully

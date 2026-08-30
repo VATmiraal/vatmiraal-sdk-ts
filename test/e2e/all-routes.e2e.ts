@@ -19,7 +19,7 @@ import {
 	type TaxGridAnalysisRequest
 } from '../../index';
 
-const BASE_URL = process.env.VATMIRAAL_E2E_URL ?? 'http://localhost:18080';
+const BASE_URL = process.env.VATMIRAAL_E2E_URL ?? 'http://localhost:8468';
 const client = new VatmiraalClient({ baseUrl: BASE_URL, token: 'vatmiraal-dev-token' });
 
 // Unwrap a Result, failing the test with the API error message if it is one.
