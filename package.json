@@ -1,9 +1,15 @@
 {
-	"name": "@vatmiraal/sdk",
+	"name": "@vatmiraal/vatmiraal-sdk",
 	"version": "0.1.0",
 	"description": "TypeScript and JavaScript client SDK for the VATmiraal API.",
 	"author": "VATmiraal LLC",
 	"license": "Apache-2.0",
+	"homepage": "https://vatmiraal.github.io/vatmiraal-sdk-ts/",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/VATmiraal/vatmiraal-sdk-ts.git"
+	},
+	"bugs": "https://github.com/VATmiraal/vatmiraal-sdk-ts/issues",
 	"type": "module",
 	"publishConfig": {
 		"access": "public"
@@ -33,7 +39,10 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"docs": "typedoc",
-		"gen:api": "bun scripts/gen-api.ts"
+		"gen:api": "bun scripts/gen-api.ts",
+		"release": "bun publish --access public",
+		"prepack": "bun run build",
+		"prepublishOnly": "bun run lint && bun run typecheck && bun run test"
 	},
 	"dependencies": {
 		"result-interface": "^2.4.1"

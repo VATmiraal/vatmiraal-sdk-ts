@@ -1,4 +1,8 @@
-# @vatmiraal/sdk
+# @vatmiraal/vatmiraal-sdk
+
+[![npm](https://img.shields.io/npm/v/@vatmiraal/vatmiraal-sdk)](https://www.npmjs.com/package/@vatmiraal/vatmiraal-sdk)
+[![docs](https://img.shields.io/badge/docs-typedoc-blue)](https://vatmiraal.github.io/vatmiraal-sdk-ts/)
+[![license](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
 
 TypeScript and JavaScript client for the VATmiraal API.
 
@@ -13,13 +17,13 @@ TypeScript and JavaScript client for the VATmiraal API.
 Install with any JavaScript package manager:
 
 ```bash
-npm install @vatmiraal/sdk
+npm install @vatmiraal/vatmiraal-sdk
 # or
-yarn add @vatmiraal/sdk
+yarn add @vatmiraal/vatmiraal-sdk
 # or
-pnpm add @vatmiraal/sdk
+pnpm add @vatmiraal/vatmiraal-sdk
 # or
-bun add @vatmiraal/sdk
+bun add @vatmiraal/vatmiraal-sdk
 ```
 
 ## Getting started
@@ -29,7 +33,7 @@ Create a client, authenticating with an API token or browser credentials (see
 a `Result`: a value on success, or an `Error` on failure.
 
 ```ts
-import { VatmiraalClient, ping } from '@vatmiraal/sdk';
+import { VatmiraalClient, ping } from '@vatmiraal/vatmiraal-sdk';
 import { isError } from 'result-interface';
 
 const client = new VatmiraalClient({ token: 'your-token' });
@@ -87,7 +91,7 @@ if (isError(res)) {
 Analyse a transaction and receive the VAT grids, their justifications, and any warnings.
 
 ```ts
-import { analyzeTaxGrid } from '@vatmiraal/sdk';
+import { analyzeTaxGrid } from '@vatmiraal/vatmiraal-sdk';
 
 const res = await analyzeTaxGrid(client, {
 	transaction: {
@@ -120,7 +124,7 @@ if (!isError(res)) {
 ### VAT number validation
 
 ```ts
-import { validateVat, fetchVatTemplates, fetchVatTemplate } from '@vatmiraal/sdk';
+import { validateVat, fetchVatTemplates, fetchVatTemplate } from '@vatmiraal/vatmiraal-sdk';
 
 await validateVat(client, { vat: 'BE0123456789', template_validation: true });
 await fetchVatTemplates(client); // every country's VAT number template
@@ -132,7 +136,7 @@ await fetchVatTemplate(client, 'belgium'); // one country's template
 Turn a free-form description into candidate objects for an analysis.
 
 ```ts
-import { inferObject } from '@vatmiraal/sdk';
+import { inferObject } from '@vatmiraal/vatmiraal-sdk';
 
 await inferObject(client, 'consulting services');
 ```
@@ -143,7 +147,7 @@ Fetch the vocabularies the API validates against: transaction types, party types
 methods, countries, object categories, and property specifications.
 
 ```ts
-import { fetchSchema } from '@vatmiraal/sdk';
+import { fetchSchema } from '@vatmiraal/vatmiraal-sdk';
 
 const schema = await fetchSchema(client); // one call for the whole schema
 ```
@@ -159,7 +163,7 @@ either a branded, deeply-readonly `Safe` value or the list of failures, each wit
 to the offending field.
 
 ```ts
-import { fetchSchema, taxGridAnalysisRequest, analyzeTaxGrid } from '@vatmiraal/sdk';
+import { fetchSchema, taxGridAnalysisRequest, analyzeTaxGrid } from '@vatmiraal/vatmiraal-sdk';
 import { isError } from 'result-interface';
 
 const schema = await fetchSchema(client);
@@ -184,7 +188,7 @@ The types are written against a fixed set of endpoints. To confirm the running s
 exposes them, check every endpoint the SDK calls against the live OpenAPI document:
 
 ```ts
-import { checkEndpointDrift } from '@vatmiraal/sdk';
+import { checkEndpointDrift } from '@vatmiraal/vatmiraal-sdk';
 import { isError } from 'result-interface';
 
 const drift = await checkEndpointDrift(client);
@@ -203,7 +207,7 @@ The client runs in any modern browser. For a script tag, load the bundle from a 
 `Vatmiraal` global.
 
 ```html
-<script src="https://unpkg.com/@vatmiraal/sdk"></script>
+<script src="https://unpkg.com/@vatmiraal/vatmiraal-sdk"></script>
 <script>
 	const client = new Vatmiraal.VatmiraalClient({ token: 'your-token' });
 	Vatmiraal.ping(client).then(console.log);
