@@ -30,13 +30,21 @@ services:
     build: git@github.com:VATmiraal/vatmiraal-services.git#main
     command: ['-configPath', 'config.json']
     ports:
-      - '8080:8080'
+      - '18080:8080'
     depends_on:
       ollama-pull:
         condition: service_completed_successfully
     volumes:
       - ./config.json:/app/config.json:ro
-      - ./dev_token.pl:/app/kb/storage/dev_token.pl:ro
+      # A complete pre-provisioned kb/storage so the backend's bootstrap keeps it (KEEP mode)
+      # instead of seeding — seeding refuses to run over these files. Mirrors the backend's own
+      # e2e auth fixture; dev_token.pl carries the bearer token the SDK authenticates with.
+      - ./storage/dev_token.pl:/app/kb/storage/dev_token.pl
+      - ./storage/dev_user.pl:/app/kb/storage/dev_user.pl
+      - ./storage/manager.pl:/app/kb/storage/manager.pl
+      - ./storage/user_history.pl:/app/kb/storage/user_history.pl
+      - ./storage/token_history.pl:/app/kb/storage/token_history.pl
+      - ./storage/manager_history.pl:/app/kb/storage/manager_history.pl
 
 volumes:
   ollama_data:

@@ -4,7 +4,7 @@ import { $ } from 'bun';
 // be healthy, run the e2e suite against it, then tear everything down. Local-only; needs podman and
 // a git-authenticated host for the private backend clone. See test/e2e/compose.yml.
 const compose = ['compose', '-f', 'test/e2e/compose.yml'];
-const baseUrl = process.env.VATMIRAAL_E2E_URL ?? 'http://localhost:8080';
+const baseUrl = process.env.VATMIRAAL_E2E_URL ?? 'http://localhost:18080';
 
 async function waitHealthy(timeoutMs = 180_000): Promise<void> {
 	const deadline = Date.now() + timeoutMs;
