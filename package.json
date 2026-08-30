@@ -39,6 +39,7 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"docs": "typedoc",
+		"e2e": "bun scripts/e2e.ts",
 		"release": "bun publish --access public",
 		"prepack": "bun run build",
 		"prepublishOnly": "bun run lint && bun run typecheck && bun run test"

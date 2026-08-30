@@ -1,0 +1,42 @@
+# Local e2e stack: Ollama + the VATmiraal backend built straight from its git repo.
+# Requires podman and a git-authenticated host (the backend repo is private). Not used in CI.
+services:
+  ollama:
+    image: docker.io/ollama/ollama:latest
+    environment:
+      OLLAMA_KEEP_ALIVE: '-1'
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ['CMD', 'ollama', 'list']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  ollama-pull:
+    image: docker.io/ollama/ollama:latest
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    entrypoint: ['ollama', 'pull', 'qwen2.5:0.5b']
+    restart: 'no'
+
+  backend:
+    # Compose clones + builds the backend from its git repo (pin the ref for reproducibility).
+    # SSH URL, so the host's git SSH auth is used for the private clone.
+    build: git@github.com:VATmiraal/vatmiraal-services.git#main
+    command: ['-configPath', 'config.json']
+    ports:
+      - '8080:8080'
+    depends_on:
+      ollama-pull:
+        condition: service_completed_successfully
+    volumes:
+      - ./config.json:/app/config.json:ro
+      - ./dev_token.pl:/app/kb/storage/dev_token.pl:ro
+
+volumes:
+  ollama_data:
