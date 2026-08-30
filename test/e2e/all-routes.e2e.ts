@@ -80,23 +80,29 @@ describe('SDK against the live backend', () => {
 });
 
 describe('OpenAPI completeness', () => {
+	// Compare routes by shape, not by parameter name: a path parameter's name is cosmetic and does
+	// not affect routing, so '/vat-template/{country}' and '/vat-template/{iso}' are the same route.
+	const shape = (route: string) => route.replace(/\{[^}]+\}/g, '{}');
+
 	// The SDK's own route registry — the client refuses anything not in it — in OpenAPI key form.
 	// Derived from the client, not restated here, so it can never drift from what the SDK calls.
-	const SDK_ROUTES = new Set(client.routes.map((r) => `${r.method} ${r.path}`));
+	const SDK_ROUTES = new Set(client.routes.map((r) => shape(`${r.method} ${r.path}`)));
 
 	// Routes the spec exposes that the SDK deliberately does not wrap (meta, docs, admin, and the
 	// by-value / broad convenience sub-routes). Add here consciously if the SDK should stay lean.
-	const NOT_WRAPPED = new Set([
-		'GET /openapi.json',
-		'GET /doc',
-		'GET /doc/',
-		'GET /debug',
-		'GET /category/broad',
-		'GET /category/{value}',
-		'GET /category/broad/{value}',
-		'GET /property/object/{value}',
-		'GET /property/party/{value}'
-	]);
+	const NOT_WRAPPED = new Set(
+		[
+			'GET /openapi.json',
+			'GET /doc',
+			'GET /doc/',
+			'GET /debug',
+			'GET /category/broad',
+			'GET /category/{value}',
+			'GET /category/broad/{value}',
+			'GET /property/object/{value}',
+			'GET /property/party/{value}'
+		].map(shape)
+	);
 
 	it('the SDK covers every route the API exposes', async () => {
 		const res = await fetch(`${BASE_URL}/openapi.json`);
@@ -104,7 +110,7 @@ describe('OpenAPI completeness', () => {
 		const specRoutes = new Set<string>();
 		for (const [path, item] of Object.entries(spec.paths)) {
 			for (const method of Object.keys(item)) {
-				specRoutes.add(`${method.toUpperCase()} ${path}`);
+				specRoutes.add(shape(`${method.toUpperCase()} ${path}`));
 			}
 		}
 
