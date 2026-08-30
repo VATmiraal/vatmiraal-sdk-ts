@@ -1,4 +1,4 @@
-# Local e2e stack: Ollama + the VATmiraal backend built straight from its git repo.
+# Local e2e stack: Ollama + the VATmiraal backend built from its git repo.
 # Requires podman and a git-authenticated host (the backend repo is private). Not used in CI.
 services:
   ollama:
