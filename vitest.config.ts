@@ -4,6 +4,7 @@ export default defineConfig({
 	test: {
 		environment: 'node',
 		include: ['test/**/*.spec.ts'],
+		exclude: ['test/e2e/**'],
 		coverage: {
 			provider: 'v8',
 			include: ['lib/**'],

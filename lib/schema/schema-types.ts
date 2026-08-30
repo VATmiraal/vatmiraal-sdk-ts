@@ -14,7 +14,22 @@ export interface ObjectCategory {
 	broad_category: BroadCategoryRef;
 	transaction_types: TransactionType[];
 	description: string;
-	properties: string[];
+	/** The object properties this category accepts. `null` when it accepts none. */
+	properties: string[] | null;
+}
+
+/** A broad category together with every object category that belongs to it. */
+export interface BroadCategoryDetail {
+	value: string;
+	label: string;
+	categories: ObjectCategory[];
+}
+
+/** A country equivalence class and the countries that fall under it. */
+export interface CountryClass {
+	/** The class name, e.g. `belgium`, `other_eu`, or `third_country`. */
+	class: string;
+	countries: Country[];
 }
 
 /**

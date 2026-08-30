@@ -153,7 +153,83 @@ const schema = await fetchSchema(client); // one call for the whole schema
 ```
 
 Individual endpoints (`fetchCountries`, `fetchCategories`, `fetchObjectProperties`, and the
-rest) are exported too when only part of the schema is needed.
+rest) are exported too when only part of the schema is needed. Single items and the extra
+taxonomy endpoints are available as well:
+
+```ts
+import {
+	fetchCategory,
+	fetchBroadCategories,
+	fetchBroadCategory,
+	fetchObjectProperty,
+	fetchPartyProperty,
+	fetchCountryClasses
+} from '@vatmiraal/vatmiraal-sdk';
+
+await fetchCategory(client, 'general_service'); // one object category
+await fetchBroadCategories(client); // the broad groupings categories fall under
+await fetchBroadCategory(client, 'services'); // a broad group and its categories
+await fetchObjectProperty(client, 'location'); // one object property spec
+await fetchPartyProperty(client, 'vat_liable'); // one party property spec
+await fetchCountryClasses(client); // country equivalence classes (e.g. other_eu)
+```
+
+### Audit
+
+Search the input scenarios that produce a set of target grids. The result is a stream: the outer
+`Result` covers the setup (a transport failure or a non-ok status, such as `503` when the audit
+queue is full), and on success you iterate the scenarios as they arrive. The generator returns the
+terminal trailer once the search ends.
+
+```ts
+import { auditScenarios, fetchAuditCapabilities } from '@vatmiraal/vatmiraal-sdk';
+import { isError } from 'result-interface';
+
+// Describe the input model: which dimensions can be grounded, and how.
+await fetchAuditCapabilities(client);
+
+const stream = await auditScenarios(client, {
+	target: [{ grid: '47', amount: 109 }],
+	taxable_point: '2025-04-30',
+	taxable_amount: 109,
+	vat_amount: 0,
+	supplier: { type: 'company', vat_number: 'BE0430810949', country: 'belgium' },
+	receiver: { type: 'individual', vat_number: '', country: 'belgium' },
+	object: { type: 'energy_supply' },
+	limit: 20
+});
+if (isError(stream)) throw stream.error;
+
+for await (const scenario of stream.value) {
+	scenario.grids; // the grids this scenario produces
+}
+```
+
+Each groundable dimension may be a fixed value, an `{ options }` narrowing, `null`, or omitted
+entirely — omitting it leaves it open for the search to vary. To read the terminal trailer, drive
+the generator by hand and inspect its return value:
+
+```ts
+let next = await stream.value.next();
+while (!next.done) next = await stream.value.next();
+next.value; // { done, count, truncated, reason }
+```
+
+### Sessions
+
+For cookie-based sessions, exchange an OAuth ID token for a session, read the current identity,
+and clear it. These set and rely on a session cookie, so build the client with
+`credentials: 'include'` so the cookie is stored and resent.
+
+```ts
+import { login, fetchIdentity, logout } from '@vatmiraal/vatmiraal-sdk';
+
+const client = new VatmiraalClient({ credentials: 'include' });
+
+await login(client, { id_token: googleIdToken }); // opens a session, returns the identity
+await fetchIdentity(client); // the identity the session belongs to
+await logout(client); // clears the session, resolves to true
+```
 
 ## Validating a request
 

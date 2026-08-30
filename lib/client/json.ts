@@ -1,6 +1,6 @@
 import { result, error, safePromise, isError, type SafePromise } from 'result-interface';
 import type { Client } from './types';
-import { ApiError, isApiErrorBody } from './api-error';
+import { apiErrorFromResponse } from './api-error';
 import { toError } from '../common/to-error';
 
 /**
@@ -19,13 +19,7 @@ export async function requestJson<T>(
 		return res;
 	}
 	if (!res.value.ok) {
-		const body = await safePromise(res.value.json());
-		if (!isError(body) && isApiErrorBody(body.value)) {
-			return error(
-				new ApiError(res.value.status, body.value.type, body.value.message, body.value.extra)
-			);
-		}
-		return error(new Error(`${path} returned ${res.value.status}`));
+		return error(await apiErrorFromResponse(res.value, path));
 	}
 	const json = await safePromise(res.value.json());
 	if (isError(json)) {

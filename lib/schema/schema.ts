@@ -3,8 +3,24 @@ import type { Client } from '../client/types';
 import { requestJson } from '../client/json';
 import { toError } from '../common/to-error';
 import type { Country, PartyType, TransactionType, TransportBy } from '../common/domain-types';
-import type { ObjectCategory, PropertySpec, VatSchema } from './schema-types';
-import { isObjectCategoryArray, isPropertySpecArray, isStringArray } from './schema-guards';
+import type {
+	BroadCategoryDetail,
+	BroadCategoryRef,
+	CountryClass,
+	ObjectCategory,
+	PropertySpec,
+	VatSchema
+} from './schema-types';
+import {
+	isBroadCategoryDetail,
+	isBroadCategoryRefArray,
+	isCountryClassArray,
+	isObjectCategory,
+	isObjectCategoryArray,
+	isPropertySpec,
+	isPropertySpecArray,
+	isStringArray
+} from './schema-guards';
 
 /** Fetch the transaction types the analysis recognises. */
 export function fetchTransactionTypes(client: Client): SafePromise<TransactionType[], Error> {
@@ -31,14 +47,53 @@ export function fetchCategories(client: Client): SafePromise<ObjectCategory[], E
 	return requestJson(client, '/category', isObjectCategoryArray);
 }
 
+/** Fetch a single object category by its value. */
+export function fetchCategory(client: Client, value: string): SafePromise<ObjectCategory, Error> {
+	return requestJson(client, `/category/${encodeURIComponent(value)}`, isObjectCategory);
+}
+
+/** Fetch the broad categories object categories are grouped under. */
+export function fetchBroadCategories(client: Client): SafePromise<BroadCategoryRef[], Error> {
+	return requestJson(client, '/category/broad', isBroadCategoryRefArray);
+}
+
+/** Fetch a single broad category and every object category that belongs to it. */
+export function fetchBroadCategory(
+	client: Client,
+	value: string
+): SafePromise<BroadCategoryDetail, Error> {
+	return requestJson(client, `/category/broad/${encodeURIComponent(value)}`, isBroadCategoryDetail);
+}
+
 /** Fetch the specs of the properties an object can carry. */
 export function fetchObjectProperties(client: Client): SafePromise<PropertySpec[], Error> {
 	return requestJson(client, '/property/object', isPropertySpecArray);
 }
 
+/** Fetch the spec of a single object property by its value. */
+export function fetchObjectProperty(
+	client: Client,
+	value: string
+): SafePromise<PropertySpec, Error> {
+	return requestJson(client, `/property/object/${encodeURIComponent(value)}`, isPropertySpec);
+}
+
 /** Fetch the specs of the properties a party can carry. */
 export function fetchPartyProperties(client: Client): SafePromise<PropertySpec[], Error> {
 	return requestJson(client, '/property/party', isPropertySpecArray);
+}
+
+/** Fetch the spec of a single party property by its value. */
+export function fetchPartyProperty(
+	client: Client,
+	value: string
+): SafePromise<PropertySpec, Error> {
+	return requestJson(client, `/property/party/${encodeURIComponent(value)}`, isPropertySpec);
+}
+
+/** Fetch the country equivalence classes and the countries under each. */
+export function fetchCountryClasses(client: Client): SafePromise<CountryClass[], Error> {
+	return requestJson(client, '/country-class', isCountryClassArray);
 }
 
 /**

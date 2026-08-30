@@ -1,4 +1,11 @@
-import type { BroadCategoryRef, ObjectCategory, PropertyArg, PropertySpec } from './schema-types';
+import type {
+	BroadCategoryDetail,
+	BroadCategoryRef,
+	CountryClass,
+	ObjectCategory,
+	PropertyArg,
+	PropertySpec
+} from './schema-types';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null;
@@ -20,7 +27,7 @@ export function isObjectCategory(value: unknown): value is ObjectCategory {
 		isBroadCategoryRef(value.broad_category) &&
 		isStringArray(value.transaction_types) &&
 		typeof value.description === 'string' &&
-		isStringArray(value.properties)
+		(value.properties === null || isStringArray(value.properties))
 	);
 }
 
@@ -48,6 +55,27 @@ export function isPropertySpec(value: unknown): value is PropertySpec {
 
 export function isObjectCategoryArray(value: unknown): value is ObjectCategory[] {
 	return Array.isArray(value) && value.every(isObjectCategory);
+}
+
+export function isBroadCategoryRefArray(value: unknown): value is BroadCategoryRef[] {
+	return Array.isArray(value) && value.every(isBroadCategoryRef);
+}
+
+export function isBroadCategoryDetail(value: unknown): value is BroadCategoryDetail {
+	return (
+		isRecord(value) &&
+		typeof value.value === 'string' &&
+		typeof value.label === 'string' &&
+		isObjectCategoryArray(value.categories)
+	);
+}
+
+export function isCountryClass(value: unknown): value is CountryClass {
+	return isRecord(value) && typeof value.class === 'string' && isStringArray(value.countries);
+}
+
+export function isCountryClassArray(value: unknown): value is CountryClass[] {
+	return Array.isArray(value) && value.every(isCountryClass);
 }
 
 export function isPropertySpecArray(value: unknown): value is PropertySpec[] {

@@ -1,7 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import {
 	isStringArray,
+	isBroadCategoryDetail,
 	isBroadCategoryRef,
+	isBroadCategoryRefArray,
+	isCountryClass,
+	isCountryClassArray,
 	isObjectCategory,
 	isObjectCategoryArray,
 	isPropertyArg,
@@ -46,6 +50,9 @@ describe(isBroadCategoryRef.name, () => {
 describe(isObjectCategory.name, () => {
 	it('accepts a well-formed category', () => {
 		expect(isObjectCategory(category)).toBe(true);
+	});
+	it('accepts null properties', () => {
+		expect(isObjectCategory({ ...category, properties: null })).toBe(true);
 	});
 	it('rejects on each malformed field', () => {
 		expect(isObjectCategory(null)).toBe(false);
@@ -95,5 +102,47 @@ describe('array guards', () => {
 		expect(isObjectCategoryArray([{}])).toBe(false);
 		expect(isPropertySpecArray([spec])).toBe(true);
 		expect(isPropertySpecArray([{}])).toBe(false);
+	});
+});
+
+describe(isBroadCategoryRefArray.name, () => {
+	it('accepts arrays of refs and rejects others', () => {
+		expect(isBroadCategoryRefArray([ref])).toBe(true);
+		expect(isBroadCategoryRefArray([])).toBe(true);
+		expect(isBroadCategoryRefArray('x')).toBe(false);
+		expect(isBroadCategoryRefArray([{}])).toBe(false);
+	});
+});
+
+describe(isBroadCategoryDetail.name, () => {
+	const detail = { value: 'services', label: 'Services', categories: [category] };
+	it('accepts a well-formed detail', () => {
+		expect(isBroadCategoryDetail(detail)).toBe(true);
+	});
+	it('rejects on each malformed field', () => {
+		expect(isBroadCategoryDetail(null)).toBe(false);
+		expect(isBroadCategoryDetail({ ...detail, value: 1 })).toBe(false);
+		expect(isBroadCategoryDetail({ ...detail, label: 1 })).toBe(false);
+		expect(isBroadCategoryDetail({ ...detail, categories: [{}] })).toBe(false);
+	});
+});
+
+describe(isCountryClass.name, () => {
+	const cc = { class: 'other_eu', countries: ['france'] };
+	it('accepts a well-formed class', () => {
+		expect(isCountryClass(cc)).toBe(true);
+	});
+	it('rejects on each malformed field', () => {
+		expect(isCountryClass(null)).toBe(false);
+		expect(isCountryClass({ ...cc, class: 1 })).toBe(false);
+		expect(isCountryClass({ ...cc, countries: [1] })).toBe(false);
+	});
+});
+
+describe(isCountryClassArray.name, () => {
+	it('accepts arrays of classes and rejects others', () => {
+		expect(isCountryClassArray([{ class: 'belgium', countries: [] }])).toBe(true);
+		expect(isCountryClassArray('x')).toBe(false);
+		expect(isCountryClassArray([{}])).toBe(false);
 	});
 });
