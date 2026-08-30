@@ -80,22 +80,9 @@ describe('SDK against the live backend', () => {
 });
 
 describe('OpenAPI completeness', () => {
-	// Routes the SDK calls (template form, matching OpenAPI path keys).
-	const SDK_ROUTES = new Set([
-		'GET /',
-		'POST /tax-grid-analysis',
-		'POST /vat-validation',
-		'GET /vat-template',
-		'GET /vat-template/{country}',
-		'POST /inference/object',
-		'GET /transaction-type',
-		'GET /party-type',
-		'GET /transport-by',
-		'GET /country',
-		'GET /category',
-		'GET /property/object',
-		'GET /property/party'
-	]);
+	// The SDK's own route registry — the client refuses anything not in it — in OpenAPI key form.
+	// Derived from the client, not restated here, so it can never drift from what the SDK calls.
+	const SDK_ROUTES = new Set(client.routes.map((r) => `${r.method} ${r.path}`));
 
 	// Routes the spec exposes that the SDK deliberately does not wrap (meta, docs, admin, and the
 	// by-value / broad convenience sub-routes). Add here consciously if the SDK should stay lean.

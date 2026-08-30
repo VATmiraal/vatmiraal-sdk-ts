@@ -30,10 +30,10 @@ describe('VatmiraalClient.request', () => {
 		const mock = stubFetch(() => Promise.resolve(new Response('ok', { status: 200 })));
 		const client = new VatmiraalClient({ token: 'abc', baseUrl: 'http://api.test' });
 
-		const res = await client.request('/x');
+		const res = await client.request('/country');
 
 		expect(res).toBeResult();
-		expect(mock.mock.calls[0]![0]).toBe('http://api.test/x');
+		expect(mock.mock.calls[0]![0]).toBe('http://api.test/country');
 		expect((initOf(mock).headers as Headers).get('Authorization')).toBe('Bearer abc');
 	});
 
@@ -41,7 +41,7 @@ describe('VatmiraalClient.request', () => {
 		const mock = stubFetch(() => Promise.resolve(new Response('', { status: 200 })));
 		const client = new VatmiraalClient({ credentials: 'include', baseUrl: 'http://api.test' });
 
-		await client.request('/x');
+		await client.request('/country');
 
 		expect(initOf(mock).credentials).toBe('include');
 		expect((initOf(mock).headers as Headers).get('Authorization')).toBeNull();
@@ -51,7 +51,7 @@ describe('VatmiraalClient.request', () => {
 		const mock = stubFetch(() => Promise.resolve(new Response('', { status: 401 })));
 		const client = new VatmiraalClient({ token: 'abc', baseUrl: 'http://api.test' });
 
-		const res = await client.request('/x');
+		const res = await client.request('/country');
 
 		expect(mock).toHaveBeenCalledTimes(1);
 		expect(isResult(res) && res.value.status).toBe(401);
@@ -61,6 +61,22 @@ describe('VatmiraalClient.request', () => {
 		stubFetch(() => Promise.reject(new Error('network down')));
 		const client = new VatmiraalClient({ token: 'abc', baseUrl: 'http://api.test' });
 
-		expect(await client.request('/x')).toBeError(new Error('network down'));
+		expect(await client.request('/country')).toBeError(new Error('network down'));
+	});
+
+	it('refuses an unregistered route without touching the network', async () => {
+		const mock = stubFetch(() => Promise.resolve(new Response('', { status: 200 })));
+		const client = new VatmiraalClient({ token: 'abc', baseUrl: 'http://api.test' });
+
+		expect(await client.request('/not-a-route')).toBeError();
+		expect(mock).not.toHaveBeenCalled();
+	});
+
+	it('accepts a registered templated route with its parameter filled', async () => {
+		const mock = stubFetch(() => Promise.resolve(new Response('', { status: 200 })));
+		const client = new VatmiraalClient({ token: 'abc', baseUrl: 'http://api.test' });
+
+		expect(await client.request('/vat-template/belgium')).toBeResult();
+		expect(mock).toHaveBeenCalledTimes(1);
 	});
 });
