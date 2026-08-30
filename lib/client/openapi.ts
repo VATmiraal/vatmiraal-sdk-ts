@@ -4,8 +4,7 @@ import { requestJson } from './json';
 import { PATH_OPENAPI, type HttpMethod } from './endpoints';
 
 /**
- * A minimal view of an OpenAPI document: its `paths`, each mapping the methods it declares.
- * Only the parts the drift check reads are modelled.
+ * The `paths` of an OpenAPI document and the methods each path declares.
  */
 export interface OpenApiDocument {
 	paths: Record<string, Partial<Record<Lowercase<HttpMethod>, unknown>>>;
