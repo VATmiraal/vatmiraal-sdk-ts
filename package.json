@@ -27,13 +27,13 @@
 	],
 	"scripts": {
 		"build": "tsup",
-		"typecheck": "tsc --noEmit",
+		"typecheck": "bun run gen:api test/fixtures/openapi.json && tsc --noEmit",
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"docs": "typedoc",
-		"gen:api": "openapi-typescript test/fixtures/openapi.json -o lib/generated/api.ts"
+		"gen:api": "bun scripts/gen-api.ts"
 	},
 	"dependencies": {
 		"result-interface": "^2.4.1"
