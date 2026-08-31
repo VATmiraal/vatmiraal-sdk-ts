@@ -9,6 +9,7 @@ export type {
 	AuditRequest,
 	AuditScenario,
 	AuditTrailer,
+	AuditTransport,
 	Field,
 	NumericRange,
 	PropertyOverride,

@@ -1,4 +1,4 @@
-import type { Country, ObjectType, PartyType } from '../common/domain-types';
+import type { Country, ObjectType, PartyType, TransportBy } from '../common/domain-types';
 import type { Perspective } from '../analysis';
 import type { TaxGridResult } from '../analysis';
 
@@ -37,6 +37,19 @@ export interface AuditParty {
 }
 
 /**
+ * The goods movement pinned on an audited delivery: where the goods start and end, who carries
+ * them, and whether proof of transport exists. Grounding it fixes place of supply so cross-border
+ * grids (intra-community supply, export) become reachable. Only applies to a delivery; omit it to
+ * let the search vary the transport (no transport for a domestic supply, or a route otherwise).
+ */
+export interface AuditTransport {
+	from: Country;
+	to: Country;
+	by: TransportBy;
+	proof_of_transport: boolean;
+}
+
+/**
  * The transacted object in an audit request. Each groundable dimension may be a fixed value, an
  * `{ options }` narrowing, `null`, or omitted entirely — omitting it leaves it open for the search.
  */
@@ -45,6 +58,8 @@ export interface AuditObject {
 	/** The place of supply, as a country equivalence class name (e.g. `belgium`, `other_eu`). */
 	place?: Field<string>;
 	properties?: PropertyOverride[];
+	/** Goods movement for a delivery; grounding it reaches cross-border grids. Ignored for services. */
+	transport?: AuditTransport;
 }
 
 /** A request to audit the input scenarios that produce a set of target grids. */
