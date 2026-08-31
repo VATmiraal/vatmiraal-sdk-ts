@@ -37,16 +37,16 @@ export interface AuditParty {
 }
 
 /**
- * The goods movement pinned on an audited delivery: where the goods start and end, who carries
- * them, and whether proof of transport exists. Grounding it fixes place of supply so cross-border
- * grids (intra-community supply, export) become reachable. Only applies to a delivery; omit it to
- * let the search vary the transport (no transport for a domestic supply, or a route otherwise).
+ * The goods movement of an audited delivery, from which its place of supply is derived. Each field
+ * may be pinned or omitted to leave it open for the search — grounding the route reaches
+ * cross-border grids (intra-community supply, export). Only applies to a delivery; omitting the
+ * whole `transport` searches the movement itself (no transport for a domestic supply, or a route).
  */
 export interface AuditTransport {
-	from: Country;
-	to: Country;
-	by: TransportBy;
-	proof_of_transport: boolean;
+	from?: Country;
+	to?: Country;
+	by?: TransportBy;
+	proof_of_transport?: boolean;
 }
 
 /**
@@ -55,8 +55,12 @@ export interface AuditTransport {
  */
 export interface AuditObject {
 	type?: Field<ObjectType>;
-	/** The place of supply, as a country equivalence class name (e.g. `belgium`, `other_eu`). */
-	place?: Field<string>;
+	/**
+	 * The object's location, as a country equivalence class name (e.g. `belgium`, `other_eu`). It
+	 * drives the place of supply for services connected to immovable property, events, and energy; a
+	 * goods movement's place of supply comes from {@link AuditTransport} instead.
+	 */
+	location?: Field<string>;
 	properties?: PropertyOverride[];
 	/** Goods movement for a delivery; grounding it reaches cross-border grids. Ignored for services. */
 	transport?: AuditTransport;
