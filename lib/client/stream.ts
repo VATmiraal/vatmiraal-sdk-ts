@@ -32,25 +32,32 @@ async function* readLines(body: ReadableStream<Uint8Array>): AsyncGenerator<stri
 	const reader = body.getReader();
 	const decoder = new TextDecoder();
 	let buffer = '';
-	for (;;) {
-		const { value, done } = await reader.read();
-		if (done) {
-			break;
-		}
-		buffer += decoder.decode(value, { stream: true });
-		let newline = buffer.indexOf('\n');
-		while (newline !== -1) {
-			const line = buffer.slice(0, newline).trim();
-			buffer = buffer.slice(newline + 1);
-			if (line !== '') {
-				yield line;
+	// The finally cancels the reader whether the loop ends normally, throws (an aborted read), or the
+	// consumer stops early (generator return). Cancelling releases the body and drops the underlying
+	// connection, which is how an AbortSignal reaches the server to stop the query.
+	try {
+		for (;;) {
+			const { value, done } = await reader.read();
+			if (done) {
+				break;
 			}
-			newline = buffer.indexOf('\n');
+			buffer += decoder.decode(value, { stream: true });
+			let newline = buffer.indexOf('\n');
+			while (newline !== -1) {
+				const line = buffer.slice(0, newline).trim();
+				buffer = buffer.slice(newline + 1);
+				if (line !== '') {
+					yield line;
+				}
+				newline = buffer.indexOf('\n');
+			}
 		}
-	}
-	buffer += decoder.decode();
-	const last = buffer.trim();
-	if (last !== '') {
-		yield last;
+		buffer += decoder.decode();
+		const last = buffer.trim();
+		if (last !== '') {
+			yield last;
+		}
+	} finally {
+		await reader.cancel().catch(() => {});
 	}
 }

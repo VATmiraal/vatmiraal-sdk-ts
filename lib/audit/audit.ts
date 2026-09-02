@@ -24,17 +24,23 @@ export function fetchAuditCapabilities(client: Client): SafePromise<AuditCapabil
  * for await (const scenario of stream.value) render(scenario);
  * ```
  *
+ * Pass an `AbortSignal` to stop the search early: aborting closes the streaming connection, which
+ * the server observes to cancel the (single-threaded, expensive) engine query rather than letting
+ * it run to its wall-clock cap. An aborted read surfaces as the generator throwing `AbortError`.
+ *
  * The generator throws if the service reports an engine error mid-stream, if a streamed line is
  * neither a scenario nor the trailer, or if the stream ends without a trailer.
  */
 export async function auditScenarios(
 	client: Client,
-	request: AuditRequest
+	request: AuditRequest,
+	options?: { signal?: AbortSignal }
 ): SafePromise<AsyncGenerator<AuditScenario, AuditTrailer, void>, Error> {
 	const lines = await streamLines(client, '/audit', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', Accept: 'application/x-ndjson' },
-		body: JSON.stringify(request)
+		body: JSON.stringify(request),
+		signal: options?.signal
 	});
 	if (isError(lines)) {
 		return lines;

@@ -654,10 +654,16 @@ declare function fetchAuditCapabilities(client: Client): SafePromise<AuditCapabi
  * for await (const scenario of stream.value) render(scenario);
  * ```
  *
+ * Pass an `AbortSignal` to stop the search early: aborting closes the streaming connection, which
+ * the server observes to cancel the (single-threaded, expensive) engine query rather than letting
+ * it run to its wall-clock cap. An aborted read surfaces as the generator throwing `AbortError`.
+ *
  * The generator throws if the service reports an engine error mid-stream, if a streamed line is
  * neither a scenario nor the trailer, or if the stream ends without a trailer.
  */
-declare function auditScenarios(client: Client, request: AuditRequest): SafePromise<AsyncGenerator<AuditScenario, AuditTrailer, void>, Error>;
+declare function auditScenarios(client: Client, request: AuditRequest, options?: {
+    signal?: AbortSignal;
+}): SafePromise<AsyncGenerator<AuditScenario, AuditTrailer, void>, Error>;
 
 declare function isNumericRange(value: unknown): value is NumericRange;
 declare function isAuditArg(value: unknown): value is AuditArg;
