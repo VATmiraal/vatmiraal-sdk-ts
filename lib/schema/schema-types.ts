@@ -17,6 +17,13 @@ export interface ObjectCategory {
 	properties: string[];
 }
 
+/** A broad category together with every object category that belongs to it. */
+export interface BroadCategoryDetail {
+	value: string;
+	label: string;
+	categories: ObjectCategory[];
+}
+
 /**
  * One argument a property expects. `domain` is the kind of value it takes: `oneof` (choose
  * from `values`), `int` (bounded by `min`/`max`), `country`, `rate` (an integer from 0 to 100),

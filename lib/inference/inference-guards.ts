@@ -1,12 +1,18 @@
+import { isRecord, isStringArray } from '../common/guards';
 import type { AnalysisProperty } from '../analysis/tax-grid-input-types';
+import type { FieldMeta, Metadata } from '../common/metadata-types';
 import type { Candidate, InferenceResult, RawProperty } from './inference-types';
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === 'object' && value !== null;
+function isFieldMeta(value: unknown): value is FieldMeta {
+	return (
+		isRecord(value) &&
+		(value.confidence === 'high' || value.confidence === 'medium' || value.confidence === 'low') &&
+		typeof value.comment === 'string'
+	);
 }
 
-function isStringArray(value: unknown): value is string[] {
-	return Array.isArray(value) && value.every((v) => typeof v === 'string');
+export function isMetadata(value: unknown): value is Metadata {
+	return isRecord(value) && Object.values(value).every(isFieldMeta);
 }
 
 function isArgs(value: unknown): value is (string | number | boolean)[] {
@@ -31,7 +37,7 @@ function isRawProperty(value: unknown): value is RawProperty {
 function isCandidate(value: unknown): value is Candidate {
 	return (
 		isRecord(value) &&
-		typeof value.type === 'string' &&
+		(value.type === null || typeof value.type === 'string') &&
 		isStringArray(value.transaction_types) &&
 		Array.isArray(value.properties) &&
 		value.properties.every(isAnalysisProperty) &&
@@ -40,7 +46,7 @@ function isCandidate(value: unknown): value is Candidate {
 		value.extra.every(isRawProperty) &&
 		Array.isArray(value.invalid) &&
 		value.invalid.every(isRawProperty) &&
-		typeof value.comment === 'string'
+		isMetadata(value.metadata)
 	);
 }
 

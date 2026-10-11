@@ -1,14 +1,20 @@
 export {
+	fetchBroadCategories,
+	fetchBroadCategory,
 	fetchCategories,
+	fetchCategory,
 	fetchCountries,
 	fetchObjectProperties,
+	fetchObjectProperty,
 	fetchPartyProperties,
+	fetchPartyProperty,
 	fetchPartyTypes,
 	fetchSchema,
 	fetchTransactionTypes,
 	fetchTransportBy
 } from './schema';
 export type {
+	BroadCategoryDetail,
 	BroadCategoryRef,
 	ObjectCategory,
 	PropertyArg,
@@ -16,7 +22,9 @@ export type {
 	VatSchema
 } from './schema-types';
 export {
+	isBroadCategoryDetail,
 	isBroadCategoryRef,
+	isBroadCategoryRefArray,
 	isObjectCategory,
 	isObjectCategoryArray,
 	isPropertyArg,

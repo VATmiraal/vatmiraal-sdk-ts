@@ -1,6 +1,9 @@
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 import { isError, type SafePromise } from 'result-interface';
 import {
+	ApiError,
 	VatmiraalClient,
 	ping,
 	fetchSchema,
@@ -16,6 +19,7 @@ import {
 	fetchVatTemplates,
 	fetchVatTemplate,
 	inferObject,
+	parseInvoice,
 	type TaxGridAnalysisRequest
 } from '../../index';
 
@@ -26,7 +30,12 @@ const client = new VatmiraalClient({ baseUrl: BASE_URL, token: 'vatmiraal-dev-to
 async function ok<T>(label: string, promise: SafePromise<T, Error>): Promise<T> {
 	const res = await promise;
 	if (isError(res)) {
-		throw new Error(`${label} failed: ${res.error.message}`);
+		const e = res.error;
+		const detail =
+			e instanceof ApiError
+				? `${e.status} ${e.type}: ${e.message}${e.extra ? ` ${JSON.stringify(e.extra)}` : ''}`
+				: e.message;
+		throw new Error(`${label} failed: ${detail}`);
 	}
 	return res.value;
 }
@@ -77,6 +86,13 @@ describe('SDK against the live backend', () => {
 	it('infers candidate objects from a description', async () => {
 		await ok('inferObject', inferObject(client, 'consulting services'));
 	});
+
+	// Invoice extraction can escalate to vision (several LLM calls), so it gets a longer ceiling.
+	it('parses an uploaded PDF invoice', async () => {
+		const pdf = await readFile(fileURLToPath(new URL('./fixtures/invoice.pdf', import.meta.url)));
+		const reading = await ok('parseInvoice', parseInvoice(client, pdf));
+		expect(reading.status === 'valid' || reading.status === 'validation_failed').toBe(true);
+	}, 600_000);
 });
 
 describe('OpenAPI completeness', () => {
@@ -88,26 +104,18 @@ describe('OpenAPI completeness', () => {
 	// Derived from the client, not restated here, so it can never drift from what the SDK calls.
 	const SDK_ROUTES = new Set(client.routes.map((r) => shape(`${r.method} ${r.path}`)));
 
-	// Routes the spec exposes that the SDK deliberately does not wrap (meta, docs, admin, and the
-	// by-value / broad convenience sub-routes). Add here consciously if the SDK should stay lean.
+	// Routes the spec exposes that the SDK deliberately does not wrap (meta, docs, admin).
 	const NOT_WRAPPED = new Set(
-		[
-			'GET /openapi.json',
-			'GET /doc',
-			'GET /doc/',
-			'GET /debug',
-			'GET /category/broad',
-			'GET /category/{value}',
-			'GET /category/broad/{value}',
-			'GET /property/object/{value}',
-			'GET /property/party/{value}'
-		].map(shape)
+		['GET /openapi.json', 'GET /doc', 'GET /doc/', 'GET /debug'].map(shape)
 	);
+
+	// Auth session routes the SDK calls but the spec omits.
+	const SPEC_EXEMPT = new Set(['POST /auth/login', 'GET /auth/me', 'POST /auth/logout'].map(shape));
 
 	it('the SDK covers every route the API exposes', async () => {
 		const res = await fetch(`${BASE_URL}/openapi.json`);
 		const spec = (await res.json()) as { paths: Record<string, Record<string, unknown>> };
-		const specRoutes = new Set<string>();
+		const specRoutes = new Set<string>(SPEC_EXEMPT);
 		for (const [path, item] of Object.entries(spec.paths)) {
 			for (const method of Object.keys(item)) {
 				specRoutes.add(shape(`${method.toUpperCase()} ${path}`));

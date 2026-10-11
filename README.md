@@ -202,12 +202,12 @@ declarations. The correct build is selected automatically by the `exports` field
 
 ## Development
 
-To check the SDK against a real backend, `bun run e2e` brings up the service and Ollama locally
-with podman, runs the SDK against every route, and asserts it covers the whole API. This is a
-local-only tool and is intentionally not part of CI.
+To check the SDK against a real backend, start one locally and run `bun run e2e`: it exercises the
+SDK against every route and asserts it covers the whole API. This is a local-only tool and is
+intentionally not part of CI.
 
-It needs **podman** and SSH git access to the (private) backend repo, which Compose clones over
-SSH to build (`test/e2e/compose.yml`). Then run `bun run e2e`.
+It expects a backend reachable at `http://localhost:8468`; point it elsewhere with
+`VATMIRAAL_E2E_URL`. The suite authenticates with the backend's dev token.
 
 ## License
 

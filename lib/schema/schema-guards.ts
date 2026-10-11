@@ -1,12 +1,11 @@
-import type { BroadCategoryRef, ObjectCategory, PropertyArg, PropertySpec } from './schema-types';
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === 'object' && value !== null;
-}
-
-export function isStringArray(value: unknown): value is string[] {
-	return Array.isArray(value) && value.every((v) => typeof v === 'string');
-}
+import { isRecord, isStringArray } from '../common/guards';
+import type {
+	BroadCategoryDetail,
+	BroadCategoryRef,
+	ObjectCategory,
+	PropertyArg,
+	PropertySpec
+} from './schema-types';
 
 export function isBroadCategoryRef(value: unknown): value is BroadCategoryRef {
 	return isRecord(value) && typeof value.value === 'string' && typeof value.label === 'string';
@@ -48,6 +47,19 @@ export function isPropertySpec(value: unknown): value is PropertySpec {
 
 export function isObjectCategoryArray(value: unknown): value is ObjectCategory[] {
 	return Array.isArray(value) && value.every(isObjectCategory);
+}
+
+export function isBroadCategoryRefArray(value: unknown): value is BroadCategoryRef[] {
+	return Array.isArray(value) && value.every(isBroadCategoryRef);
+}
+
+export function isBroadCategoryDetail(value: unknown): value is BroadCategoryDetail {
+	return (
+		isRecord(value) &&
+		typeof value.value === 'string' &&
+		typeof value.label === 'string' &&
+		isObjectCategoryArray(value.categories)
+	);
 }
 
 export function isPropertySpecArray(value: unknown): value is PropertySpec[] {

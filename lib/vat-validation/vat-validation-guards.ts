@@ -1,12 +1,5 @@
+import { isRecord, isStringArray } from '../common/guards';
 import type { VatTemplate, VatValidationOutput } from './vat-validation-types';
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === 'object' && value !== null;
-}
-
-function isStringArray(value: unknown): value is string[] {
-	return Array.isArray(value) && value.every((v) => typeof v === 'string');
-}
 
 /** True when `value` is a well-formed {@link VatValidationOutput}. */
 export function isVatValidationOutput(value: unknown): value is VatValidationOutput {

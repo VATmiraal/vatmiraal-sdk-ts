@@ -1,3 +1,4 @@
+import { isRecord } from '../common/guards';
 import type {
 	TaxGridAnalysisResponse,
 	TaxGridResult,
@@ -6,10 +7,6 @@ import type {
 	LegalReference,
 	Warning
 } from './tax-grid-output-types';
-
-export function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === 'object' && value !== null;
-}
 
 export function isUnknownArray(value: unknown): value is unknown[] {
 	return Array.isArray(value);

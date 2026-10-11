@@ -15,6 +15,7 @@ export const DEFAULT_BASE_URL = 'https://api.vatmiraal.be';
 export const REGISTERED_ROUTES = [
 	{ method: 'GET', path: '/' },
 	{ method: 'POST', path: '/tax-grid-analysis' },
+	{ method: 'POST', path: '/parse-invoice' },
 	{ method: 'POST', path: '/vat-validation' },
 	{ method: 'GET', path: '/vat-template' },
 	{ method: 'GET', path: '/vat-template/{country}' },
@@ -24,8 +25,17 @@ export const REGISTERED_ROUTES = [
 	{ method: 'GET', path: '/transport-by' },
 	{ method: 'GET', path: '/country' },
 	{ method: 'GET', path: '/category' },
+	{ method: 'GET', path: '/category/broad' },
+	{ method: 'GET', path: '/category/broad/{value}' },
+	{ method: 'GET', path: '/category/{value}' },
 	{ method: 'GET', path: '/property/object' },
-	{ method: 'GET', path: '/property/party' }
+	{ method: 'GET', path: '/property/object/{value}' },
+	{ method: 'GET', path: '/property/party' },
+	{ method: 'GET', path: '/property/party/{value}' },
+	// The auth session routes are absent from the OpenAPI spec; the e2e check exempts them.
+	{ method: 'POST', path: '/auth/login' },
+	{ method: 'GET', path: '/auth/me' },
+	{ method: 'POST', path: '/auth/logout' }
 ] as const satisfies readonly Route[];
 
 /** Registered templates compiled once, `{param}` rewritten to the URLPattern `:param` form. */
