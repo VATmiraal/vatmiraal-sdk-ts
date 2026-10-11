@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 import { isError, type SafePromise } from 'result-interface';
 import {
+	ApiError,
 	VatmiraalClient,
 	ping,
 	fetchSchema,
@@ -29,7 +30,12 @@ const client = new VatmiraalClient({ baseUrl: BASE_URL, token: 'vatmiraal-dev-to
 async function ok<T>(label: string, promise: SafePromise<T, Error>): Promise<T> {
 	const res = await promise;
 	if (isError(res)) {
-		throw new Error(`${label} failed: ${res.error.message}`);
+		const e = res.error;
+		const detail =
+			e instanceof ApiError
+				? `${e.status} ${e.type}: ${e.message}${e.extra ? ` ${JSON.stringify(e.extra)}` : ''}`
+				: e.message;
+		throw new Error(`${label} failed: ${detail}`);
 	}
 	return res.value;
 }
