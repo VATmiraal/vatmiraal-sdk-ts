@@ -16,6 +16,7 @@ import {
 	fetchVatTemplates,
 	fetchVatTemplate,
 	inferObject,
+	parseInvoice,
 	type TaxGridAnalysisRequest
 } from '../../index';
 
@@ -76,6 +77,12 @@ describe('SDK against the live backend', () => {
 
 	it('infers candidate objects from a description', async () => {
 		await ok('inferObject', inferObject(client, 'consulting services'));
+	});
+
+	it('parses an uploaded PDF invoice', async () => {
+		const pdf = await Bun.file(new URL('./fixtures/invoice.pdf', import.meta.url)).arrayBuffer();
+		const reading = await ok('parseInvoice', parseInvoice(client, pdf));
+		expect(reading.status === 'valid' || reading.status === 'validation_failed').toBe(true);
 	});
 });
 
