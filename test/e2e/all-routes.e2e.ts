@@ -82,15 +82,11 @@ describe('SDK against the live backend', () => {
 	});
 
 	// Invoice extraction can escalate to vision (several LLM calls), so it gets a longer ceiling.
-	it(
-		'parses an uploaded PDF invoice',
-		async () => {
-			const pdf = await readFile(fileURLToPath(new URL('./fixtures/invoice.pdf', import.meta.url)));
-			const reading = await ok('parseInvoice', parseInvoice(client, pdf));
-			expect(reading.status === 'valid' || reading.status === 'validation_failed').toBe(true);
-		},
-		600_000
-	);
+	it('parses an uploaded PDF invoice', async () => {
+		const pdf = await readFile(fileURLToPath(new URL('./fixtures/invoice.pdf', import.meta.url)));
+		const reading = await ok('parseInvoice', parseInvoice(client, pdf));
+		expect(reading.status === 'valid' || reading.status === 'validation_failed').toBe(true);
+	}, 600_000);
 });
 
 describe('OpenAPI completeness', () => {
