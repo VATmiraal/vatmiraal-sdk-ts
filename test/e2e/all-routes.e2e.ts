@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 import { isError, type SafePromise } from 'result-interface';
 import {
@@ -80,7 +82,7 @@ describe('SDK against the live backend', () => {
 	});
 
 	it('parses an uploaded PDF invoice', async () => {
-		const pdf = await Bun.file(new URL('./fixtures/invoice.pdf', import.meta.url)).arrayBuffer();
+		const pdf = await readFile(fileURLToPath(new URL('./fixtures/invoice.pdf', import.meta.url)));
 		const reading = await ok('parseInvoice', parseInvoice(client, pdf));
 		expect(reading.status === 'valid' || reading.status === 'validation_failed').toBe(true);
 	});
