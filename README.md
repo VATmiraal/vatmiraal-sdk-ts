@@ -200,6 +200,15 @@ The client runs in any modern browser. For a script tag, load the bundle from a 
 The package ships an ESM build (`import`), a CommonJS build (`require`), and TypeScript
 declarations. The correct build is selected automatically by the `exports` field.
 
+## Development
+
+To check the SDK against a real backend, `bun run e2e` brings up the service and Ollama locally
+with podman, runs the SDK against every route, and asserts it covers the whole API. This is a
+local-only tool and is intentionally not part of CI.
+
+It needs **podman** and SSH git access to the (private) backend repo, which Compose clones over
+SSH to build (`test/e2e/compose.yml`). Then run `bun run e2e`.
+
 ## License
 
 Apache-2.0. Copyright VATmiraal LLC. See [LICENSE](./LICENSE).

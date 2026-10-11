@@ -10,7 +10,7 @@ import {
 
 function clientReturning(body: unknown): { client: Client; send: ReturnType<typeof vi.fn> } {
 	const send = vi.fn().mockResolvedValue(result(new Response(JSON.stringify(body))));
-	return { client: { options: { token: 't' }, request: send }, send };
+	return { client: { options: { token: 't' }, routes: [], request: send }, send };
 }
 
 describe(validateVat.name, () => {

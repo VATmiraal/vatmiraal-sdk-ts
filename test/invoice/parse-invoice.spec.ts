@@ -73,7 +73,7 @@ const FAILED = {
 
 function clientReturning(body: unknown) {
 	const send = vi.fn().mockResolvedValue(result(new Response(JSON.stringify(body))));
-	const client: Client = { options: { token: 't' }, request: send };
+	const client: Client = { options: { token: 't' }, routes: [], request: send };
 	return { client, send };
 }
 
