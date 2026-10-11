@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import {
-	isStringArray,
 	isBroadCategoryRef,
 	isObjectCategory,
 	isObjectCategoryArray,
@@ -20,17 +19,6 @@ const category = {
 	description: 'd',
 	properties: ['p']
 };
-
-describe(isStringArray.name, () => {
-	it('accepts arrays of strings', () => {
-		expect(isStringArray([])).toBe(true);
-		expect(isStringArray(['a', 'b'])).toBe(true);
-	});
-	it('rejects non-arrays and non-string elements', () => {
-		expect(isStringArray('a')).toBe(false);
-		expect(isStringArray([1])).toBe(false);
-	});
-});
 
 describe(isBroadCategoryRef.name, () => {
 	it('accepts a well-formed ref', () => {

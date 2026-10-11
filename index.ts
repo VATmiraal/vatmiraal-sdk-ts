@@ -4,3 +4,5 @@ export * from './lib/analysis';
 export * from './lib/schema';
 export * from './lib/vat-validation';
 export * from './lib/inference';
+export * from './lib/invoice';
+export * from './lib/auth';

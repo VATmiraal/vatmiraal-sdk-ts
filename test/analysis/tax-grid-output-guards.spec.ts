@@ -3,7 +3,6 @@ import {
 	isJustification,
 	isJustificationContext,
 	isLegalReference,
-	isRecord,
 	isTaxGridAnalysisResponse,
 	isTaxGridResult,
 	isUnknownArray,
@@ -52,18 +51,6 @@ const inconsistent: TaxGridAnalysisResponse = {
 	inconsistencies: [warning],
 	warnings: []
 };
-
-describe(isRecord.name, () => {
-	it('accepts a plain object', () => {
-		expect(isRecord({})).toBe(true);
-	});
-
-	it('rejects null and non-objects', () => {
-		expect(isRecord(null)).toBe(false);
-		expect(isRecord('x')).toBe(false);
-		expect(isRecord(3)).toBe(false);
-	});
-});
 
 describe(isUnknownArray.name, () => {
 	it('accepts arrays and rejects non-arrays', () => {

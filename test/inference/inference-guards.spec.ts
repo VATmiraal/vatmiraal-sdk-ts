@@ -8,7 +8,7 @@ const candidate = {
 	missing_properties: ['location'],
 	extra: [{ type: 'extra', args: [1] }],
 	invalid: [{ type: 'invalid' }],
-	comment: 'looks fine'
+	metadata: { type: { confidence: 'high', comment: 'looks fine' } }
 };
 
 const wrap = (c: unknown) => ({ candidates: [c] });
@@ -17,6 +17,10 @@ describe(isInferenceResult.name, () => {
 	it('accepts a well-formed result', () => {
 		expect(isInferenceResult({ candidates: [candidate] })).toBe(true);
 		expect(isInferenceResult({ candidates: [] })).toBe(true);
+	});
+
+	it('accepts a candidate with a null type and empty metadata', () => {
+		expect(isInferenceResult(wrap({ ...candidate, type: null, metadata: {} }))).toBe(true);
 	});
 
 	it('rejects when the envelope is malformed', () => {
@@ -32,7 +36,17 @@ describe(isInferenceResult.name, () => {
 		expect(isInferenceResult(wrap({ ...candidate, missing_properties: [1] }))).toBe(false);
 		expect(isInferenceResult(wrap({ ...candidate, extra: 'nope' }))).toBe(false);
 		expect(isInferenceResult(wrap({ ...candidate, invalid: 'nope' }))).toBe(false);
-		expect(isInferenceResult(wrap({ ...candidate, comment: 1 }))).toBe(false);
+		expect(isInferenceResult(wrap({ ...candidate, metadata: 'nope' }))).toBe(false);
+	});
+
+	it('rejects on malformed field metadata', () => {
+		expect(isInferenceResult(wrap({ ...candidate, metadata: { f: 'nope' } }))).toBe(false);
+		expect(
+			isInferenceResult(wrap({ ...candidate, metadata: { f: { confidence: 'x', comment: 'c' } } }))
+		).toBe(false);
+		expect(
+			isInferenceResult(wrap({ ...candidate, metadata: { f: { confidence: 'high', comment: 1 } } }))
+		).toBe(false);
 	});
 
 	it('rejects on malformed nested properties', () => {
