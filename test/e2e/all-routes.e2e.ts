@@ -21,6 +21,7 @@ import {
 	inferObject,
 	parseInvoice,
 	parseInvoiceAsync,
+	isParseInvoiceResponse,
 	type TaxGridAnalysisRequest
 } from '../../index';
 
@@ -92,13 +93,13 @@ describe('SDK against the live backend', () => {
 	it('parses an uploaded PDF invoice', async () => {
 		const pdf = await readFile(fileURLToPath(new URL('./fixtures/invoice.pdf', import.meta.url)));
 		const reading = await ok('parseInvoice', parseInvoice(client, pdf));
-		expect(reading.status === 'valid' || reading.status === 'validation_failed').toBe(true);
+		expect(isParseInvoiceResponse(reading)).toBe(true);
 	}, 600_000);
 
 	it('parses an uploaded PDF invoice as an async job', async () => {
 		const pdf = await readFile(fileURLToPath(new URL('./fixtures/invoice.pdf', import.meta.url)));
 		const reading = await ok('parseInvoiceAsync', parseInvoiceAsync(client, pdf));
-		expect(reading.status === 'valid' || reading.status === 'validation_failed').toBe(true);
+		expect(isParseInvoiceResponse(reading)).toBe(true);
 	}, 600_000);
 });
 
