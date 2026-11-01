@@ -105,8 +105,6 @@ function sleep(ms: number): Promise<void> {
 
 /**
  * Submit a PDF invoice as an async job and poll until it finishes, returning the terminal reading.
- * The poll interval follows the server's `Retry-After` (overridable via `pollIntervalMs`); polling
- * gives up with an error after `maxWaitMs` in total.
  */
 export async function parseInvoiceAsync(
 	client: Client,
