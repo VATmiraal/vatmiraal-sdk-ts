@@ -145,7 +145,6 @@ export function isExtractedInvoice(value: unknown): value is ExtractedInvoice {
 	);
 }
 
-/** True when `value` is a well-formed {@link ParseInvoiceResponse}. */
 export function isParseInvoiceResponse(value: unknown): value is ParseInvoiceResponse {
 	if (!isRecord(value)) {
 		return false;
@@ -165,7 +164,6 @@ export function isParseInvoiceResponse(value: unknown): value is ParseInvoiceRes
 	return false;
 }
 
-/** True when `value` is a well-formed {@link InvoiceJob} (an async submission acknowledgement). */
 export function isInvoiceJob(value: unknown): value is InvoiceJob {
 	return isRecord(value) && typeof value.job_id === 'string';
 }
