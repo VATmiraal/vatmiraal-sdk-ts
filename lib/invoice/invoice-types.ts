@@ -111,8 +111,24 @@ export type ParseInvoiceResponse =
 			data: ExtractedInvoice;
 	  };
 
-/** Options for {@link parseInvoice}. */
+/** Options for {@link parseInvoice} and {@link submitInvoiceJob}. */
 export interface ParseInvoiceOptions {
 	/** The extraction path; defaults to `auto` server-side when omitted. */
 	mode?: InvoiceMode;
 }
+
+/** Options for {@link parseInvoiceAsync}: the submit options plus poll timing. */
+export interface ParseInvoiceAsyncOptions extends ParseInvoiceOptions {
+	/** Override the poll interval; defaults to the server's `Retry-After`, else 2000ms. */
+	pollIntervalMs?: number;
+	/** Give up polling after this many ms in total; defaults to 600000 (10 minutes). */
+	maxWaitMs?: number;
+}
+
+/** A submitted async invoice job, identified for polling via {@link getInvoiceJob}. */
+export interface InvoiceJob {
+	job_id: string;
+}
+
+/** The state of an async invoice job: still running, or the terminal reading. */
+export type InvoiceJobResult = { status: 'pending'; retryAfterMs?: number } | ParseInvoiceResponse;

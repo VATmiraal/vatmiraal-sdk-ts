@@ -5,6 +5,7 @@ import {
 	isExtractedInvoice,
 	isExtractionInfo,
 	isInvoiceMetadata,
+	isInvoiceJob,
 	isInvoiceParty,
 	isInvoiceTransport,
 	isLineItem,
@@ -235,5 +236,14 @@ describe(isParseInvoiceResponse.name, () => {
 			{ error: 'x' },
 			{ data: {} }
 		]);
+	});
+});
+
+describe(isInvoiceJob.name, () => {
+	it('accepts a job with a string id and rejects anything else', () => {
+		expect(isInvoiceJob({ job_id: 'job-1' })).toBe(true);
+		expect(isInvoiceJob({ job_id: 1 })).toBe(false);
+		expect(isInvoiceJob({})).toBe(false);
+		expect(isInvoiceJob(null)).toBe(false);
 	});
 });

@@ -5,6 +5,7 @@ import type {
 	Document,
 	ExtractedInvoice,
 	ExtractionInfo,
+	InvoiceJob,
 	InvoiceMetadata,
 	InvoiceParty,
 	InvoiceTransport,
@@ -162,4 +163,9 @@ export function isParseInvoiceResponse(value: unknown): value is ParseInvoiceRes
 		);
 	}
 	return false;
+}
+
+/** True when `value` is a well-formed {@link InvoiceJob} (an async submission acknowledgement). */
+export function isInvoiceJob(value: unknown): value is InvoiceJob {
+	return isRecord(value) && typeof value.job_id === 'string';
 }
