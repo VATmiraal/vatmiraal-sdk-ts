@@ -2,7 +2,12 @@ import { describe, it, expect, vi } from 'vitest';
 import 'result-interface/vitest';
 import { result } from 'result-interface';
 import type { Client } from '../../lib/client/types';
-import { parseInvoice } from '../../lib/invoice/parse-invoice';
+import {
+	parseInvoice,
+	submitInvoiceJob,
+	getInvoiceJob,
+	parseInvoiceAsync
+} from '../../lib/invoice/parse-invoice';
 
 const meta = (field: string, comment: string) => ({
 	[field]: { confidence: 'high', comment }
@@ -117,5 +122,83 @@ describe(parseInvoice.name, () => {
 	it('errors when the payload is not a parse-invoice response', async () => {
 		const { client } = clientReturning({ status: 'nope' });
 		expect(await parseInvoice(client, new Blob([new Uint8Array([1])]))).toBeError();
+	});
+});
+
+// A client whose request resolves each queued Response in turn, for multi-step async flows.
+function clientSequence(...responses: Response[]) {
+	const send = vi.fn();
+	for (const res of responses) {
+		send.mockResolvedValueOnce(result(res));
+	}
+	const client: Client = { options: { token: 't' }, routes: [], request: send };
+	return { client, send };
+}
+
+const PDF = () => new Blob([new Uint8Array([1, 2, 3])]);
+
+describe(submitInvoiceJob.name, () => {
+	it('POSTs with Prefer: respond-async and returns the job id', async () => {
+		const { client, send } = clientSequence(
+			new Response(JSON.stringify({ job_id: 'job-1' }), { status: 202 })
+		);
+
+		expect(await submitInvoiceJob(client, PDF())).toBeResult({ job_id: 'job-1' });
+
+		const [path, init] = send.mock.calls[0]!;
+		expect(path).toBe('/parse-invoice');
+		expect(init.method).toBe('POST');
+		expect(new Headers(init.headers).get('Prefer')).toBe('respond-async');
+	});
+
+	it('appends the mode query when given', async () => {
+		const { client, send } = clientSequence(
+			new Response(JSON.stringify({ job_id: 'job-1' }), { status: 202 })
+		);
+		await submitInvoiceJob(client, PDF(), { mode: 'vision' });
+		expect(send.mock.calls[0]![0]).toBe('/parse-invoice?mode=vision');
+	});
+});
+
+describe(getInvoiceJob.name, () => {
+	it('reports pending with the Retry-After hint on a 202', async () => {
+		const { client, send } = clientSequence(
+			new Response(null, { status: 202, headers: { 'Retry-After': '2' } })
+		);
+
+		expect(await getInvoiceJob(client, 'job-1')).toBeResult({
+			status: 'pending',
+			retryAfterMs: 2000
+		});
+
+		const [path, init] = send.mock.calls[0]!;
+		expect(path).toBe('/parse-invoice/job-1');
+		expect(init.method).toBe('GET');
+	});
+
+	it('returns the terminal reading once the job is done', async () => {
+		const { client } = clientSequence(new Response(JSON.stringify(VALID)));
+		expect(await getInvoiceJob(client, 'job-1')).toBeResult(VALID);
+	});
+});
+
+describe(parseInvoiceAsync.name, () => {
+	it('submits, polls past pending, and resolves the reading', async () => {
+		const { client, send } = clientSequence(
+			new Response(JSON.stringify({ job_id: 'job-1' }), { status: 202 }),
+			new Response(null, { status: 202, headers: { 'Retry-After': '0' } }),
+			new Response(JSON.stringify(VALID))
+		);
+
+		expect(await parseInvoiceAsync(client, PDF(), { pollIntervalMs: 0 })).toBeResult(VALID);
+		expect(send).toHaveBeenCalledTimes(3);
+	});
+
+	it('errors when the job does not finish within maxWaitMs', async () => {
+		const { client } = clientSequence(
+			new Response(JSON.stringify({ job_id: 'job-1' }), { status: 202 }),
+			new Response(null, { status: 202, headers: { 'Retry-After': '0' } })
+		);
+		expect(await parseInvoiceAsync(client, PDF(), { maxWaitMs: 0 })).toBeError();
 	});
 });

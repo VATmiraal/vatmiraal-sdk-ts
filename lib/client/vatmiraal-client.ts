@@ -16,6 +16,7 @@ export const REGISTERED_ROUTES = [
 	{ method: 'GET', path: '/' },
 	{ method: 'POST', path: '/tax-grid-analysis' },
 	{ method: 'POST', path: '/parse-invoice' },
+	{ method: 'GET', path: '/parse-invoice/{id}' },
 	{ method: 'POST', path: '/vat-validation' },
 	{ method: 'GET', path: '/vat-template' },
 	{ method: 'GET', path: '/vat-template/{country}' },
