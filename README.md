@@ -211,4 +211,4 @@ It expects a backend reachable at `http://localhost:8468`; point it elsewhere wi
 
 ## License
 
-Apache-2.0. Copyright VATmiraal LLC. See [LICENSE](./LICENSE).
+Apache-2.0. Copyright VATmiraal BV. See [LICENSE](./LICENSE).

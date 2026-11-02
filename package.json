@@ -1,8 +1,8 @@
 {
 	"name": "@vatmiraal/vatmiraal-sdk",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "TypeScript and JavaScript client SDK for the VATmiraal API.",
-	"author": "VATmiraal LLC",
+	"author": "VATmiraal BV",
 	"license": "Apache-2.0",
 	"homepage": "https://vatmiraal.github.io/vatmiraal-sdk-ts/",
 	"repository": {
