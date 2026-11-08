@@ -6,6 +6,7 @@ export type LegalReference =
 			section: string;
 			subsection: string;
 			book: string;
+			comment?: string;
 	  }
 	| { code: string }
 	| { no_basis: true };

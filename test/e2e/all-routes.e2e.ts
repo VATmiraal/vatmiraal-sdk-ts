@@ -22,6 +22,11 @@ import {
 	parseInvoice,
 	parseInvoiceAsync,
 	isParseInvoiceResponse,
+	fetchCarDeductabilityMethods,
+	fetchCarDeductabilityTypes,
+	fetchCarDeductabilitySchemasByType,
+	fetchCarDeductabilitySchema,
+	computeCarDeductability,
 	type TaxGridAnalysisRequest
 } from '../../index';
 
@@ -101,6 +106,26 @@ describe('SDK against the live backend', () => {
 		const reading = await ok('parseInvoiceAsync', parseInvoiceAsync(client, pdf));
 		expect(isParseInvoiceResponse(reading)).toBe(true);
 	}, 600_000);
+
+	it('lists car deductability schemas and computes a flat-rate deduction', async () => {
+		const types = await ok('fetchCarDeductabilityTypes', fetchCarDeductabilityTypes(client));
+		expect(types.length).toBeGreaterThan(0);
+		await ok('fetchCarDeductabilityMethods', fetchCarDeductabilityMethods(client));
+		await ok(
+			'fetchCarDeductabilitySchemasByType',
+			fetchCarDeductabilitySchemasByType(client, 'car')
+		);
+		await ok(
+			'fetchCarDeductabilitySchema',
+			fetchCarDeductabilitySchema(client, 'car', 'flat_rate')
+		);
+
+		const results = await ok(
+			'computeCarDeductability',
+			computeCarDeductability(client, { type: 'car', method: 'flat_rate', args: {} })
+		);
+		expect(results.length).toBeGreaterThan(0);
+	});
 });
 
 describe('OpenAPI completeness', () => {
