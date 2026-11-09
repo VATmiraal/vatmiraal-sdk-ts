@@ -71,9 +71,9 @@ function validateArg(
 		case 'int':
 			if (typeof value !== 'number' || !Number.isInteger(value)) {
 				errors.push({ path, message: 'must be an integer' });
-			} else if (spec.min !== undefined && value < spec.min) {
+			} else if (spec.min != null && value < spec.min) {
 				errors.push({ path, message: `must be >= ${spec.min}` });
-			} else if (spec.max !== undefined && value > spec.max) {
+			} else if (spec.max != null && value > spec.max) {
 				errors.push({ path, message: `must be <= ${spec.max}` });
 			}
 			return;
