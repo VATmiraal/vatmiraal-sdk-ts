@@ -33,6 +33,12 @@ export const REGISTERED_ROUTES = [
 	{ method: 'GET', path: '/property/object/{value}' },
 	{ method: 'GET', path: '/property/party' },
 	{ method: 'GET', path: '/property/party/{value}' },
+	{ method: 'GET', path: '/deductability/car/schema/method' },
+	{ method: 'GET', path: '/deductability/car/schema/method/{method}' },
+	{ method: 'GET', path: '/deductability/car/schema/type' },
+	{ method: 'GET', path: '/deductability/car/schema/type/{type}' },
+	{ method: 'GET', path: '/deductability/car/schema/{type}/{method}' },
+	{ method: 'POST', path: '/deductability/car' },
 	// The auth session routes are absent from the OpenAPI spec; the e2e check exempts them.
 	{ method: 'POST', path: '/auth/login' },
 	{ method: 'GET', path: '/auth/me' },

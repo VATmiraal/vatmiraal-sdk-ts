@@ -6,3 +6,4 @@ export * from './lib/vat-validation';
 export * from './lib/inference';
 export * from './lib/invoice';
 export * from './lib/auth';
+export * from './lib/car-deductability';

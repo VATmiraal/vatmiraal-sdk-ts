@@ -22,6 +22,11 @@ import {
 	parseInvoice,
 	parseInvoiceAsync,
 	isParseInvoiceResponse,
+	fetchCarDeductabilityMethods,
+	fetchCarDeductabilityTypes,
+	fetchCarDeductabilitySchemasByType,
+	fetchCarDeductabilitySchema,
+	computeCarDeductability,
 	type TaxGridAnalysisRequest
 } from '../../index';
 
@@ -101,6 +106,30 @@ describe('SDK against the live backend', () => {
 		const reading = await ok('parseInvoiceAsync', parseInvoiceAsync(client, pdf));
 		expect(isParseInvoiceResponse(reading)).toBe(true);
 	}, 600_000);
+
+	it('lists car deductability schemas and computes a trip-records deduction', async () => {
+		const types = await ok('fetchCarDeductabilityTypes', fetchCarDeductabilityTypes(client));
+		expect(types.length).toBeGreaterThan(0);
+		await ok('fetchCarDeductabilityMethods', fetchCarDeductabilityMethods(client));
+		await ok(
+			'fetchCarDeductabilitySchemasByType',
+			fetchCarDeductabilitySchemasByType(client, 'light_truck')
+		);
+		await ok(
+			'fetchCarDeductabilitySchema',
+			fetchCarDeductabilitySchema(client, 'light_truck', 'trip_records')
+		);
+
+		const results = await ok(
+			'computeCarDeductability',
+			computeCarDeductability(client, {
+				type: 'light_truck',
+				method: 'trip_records',
+				args: { business_km: 8000, total_km: 10000 }
+			})
+		);
+		expect(results.length).toBeGreaterThan(0);
+	});
 });
 
 describe('OpenAPI completeness', () => {
