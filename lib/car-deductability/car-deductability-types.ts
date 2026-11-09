@@ -1,9 +1,9 @@
 import type { LegalReference } from '../analysis';
 
-/** A vehicle type the deductability rules recognise. Open set, seeded from the backend. */
+/** A vehicle type the deductability rules recognise. */
 export type CarDeductabilityType = string;
 
-/** A deductability method. Open set, seeded from the backend. */
+/** A deductability method. */
 export type CarDeductabilityMethod = string;
 
 /** One integer argument a method takes, with its inclusive bounds (null when unbounded). */
@@ -32,7 +32,7 @@ export interface CarDeductabilityRequest {
 	args: Record<string, number>;
 }
 
-/** One computed deductability outcome: either a determined deduction or none that applies. */
+/** Computed deductability outcome. */
 export type DeductabilityResult =
 	| {
 			not_applicable: false;
