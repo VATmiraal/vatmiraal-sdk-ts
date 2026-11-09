@@ -37,9 +37,9 @@ export interface PropertyArg {
 	/** Allowed values, when `domain` is `oneof`. */
 	values?: string[];
 	/** Lower bound, when `domain` is `int`. */
-	min?: number;
+	min?: number | null;
 	/** Upper bound, when `domain` is `int`. */
-	max?: number;
+	max?: number | null;
 }
 
 /** An available object or party property and the arguments it expects. */

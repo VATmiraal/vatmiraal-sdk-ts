@@ -52,6 +52,7 @@ describe(isPropertyArg.name, () => {
 		expect(
 			isPropertyArg({ name: 'n', domain: 'oneof', type_name: 't', values: ['a'], min: 0, max: 9 })
 		).toBe(true);
+		expect(isPropertyArg({ name: 'n', domain: 'int', min: null, max: null })).toBe(true);
 	});
 	it('rejects on each malformed field', () => {
 		expect(isPropertyArg(null)).toBe(false);

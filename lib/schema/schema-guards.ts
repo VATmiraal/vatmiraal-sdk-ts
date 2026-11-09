@@ -30,8 +30,8 @@ export function isPropertyArg(value: unknown): value is PropertyArg {
 		typeof value.domain === 'string' &&
 		(value.type_name === undefined || typeof value.type_name === 'string') &&
 		(value.values === undefined || isStringArray(value.values)) &&
-		(value.min === undefined || typeof value.min === 'number') &&
-		(value.max === undefined || typeof value.max === 'number')
+		(value.min === undefined || value.min === null || typeof value.min === 'number') &&
+		(value.max === undefined || value.max === null || typeof value.max === 'number')
 	);
 }
 
