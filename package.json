@@ -1,6 +1,6 @@
 {
 	"name": "@vatmiraal/vatmiraal-sdk",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"description": "TypeScript and JavaScript client SDK for the VATmiraal API.",
 	"author": "VATmiraal BV",
 	"license": "Apache-2.0",
