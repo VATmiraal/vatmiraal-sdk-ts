@@ -19,6 +19,9 @@ import {
 	fetchVatTemplates,
 	fetchVatTemplate,
 	inferObject,
+	fetchPricing,
+	fetchPricingContract,
+	fetchPricingHeimdallDefinition,
 	parseInvoice,
 	parseInvoiceAsync,
 	isParseInvoiceResponse,
@@ -92,6 +95,26 @@ describe('SDK against the live backend', () => {
 
 	it('infers candidate objects from a description', async () => {
 		await ok('inferObject', inferObject(client, 'consulting services'));
+	});
+
+	it('fetches the pricing numbers and the contract and definition PDFs', async () => {
+		const isPdf = (b: Uint8Array) =>
+			b[0] === 0x25 && b[1] === 0x50 && b[2] === 0x44 && b[3] === 0x46;
+		const pricing = await ok('fetchPricing', fetchPricing(client));
+		expect(pricing.tiers.length).toBeGreaterThan(0);
+		for (const lang of ['en', 'nl', 'fr']) {
+			expect(
+				isPdf(await ok(`fetchPricingContract ${lang}`, fetchPricingContract(client, lang)))
+			).toBe(true);
+			expect(
+				isPdf(
+					await ok(
+						`fetchPricingHeimdallDefinition ${lang}`,
+						fetchPricingHeimdallDefinition(client, lang)
+					)
+				)
+			).toBe(true);
+		}
 	});
 
 	// Invoice extraction can escalate to vision (several LLM calls), so it gets a longer ceiling.

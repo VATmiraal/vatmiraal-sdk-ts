@@ -19,6 +19,9 @@
  */
 export type Country = string;
 
+/** An ISO 4217 currency code. */
+export type Currency = string;
+
 /**
  * The role or status of a party to the transaction.
  *

@@ -14,6 +14,9 @@ export const DEFAULT_BASE_URL = 'https://api.vatmiraal.be';
  */
 export const REGISTERED_ROUTES = [
 	{ method: 'GET', path: '/' },
+	{ method: 'GET', path: '/pricing' },
+	{ method: 'GET', path: '/pricing/contract' },
+	{ method: 'GET', path: '/pricing/heimdall_definition' },
 	{ method: 'POST', path: '/tax-grid-analysis' },
 	{ method: 'POST', path: '/parse-invoice' },
 	{ method: 'GET', path: '/parse-invoice/{id}' },
