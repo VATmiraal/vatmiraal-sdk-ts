@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import 'result-interface/vitest';
-import { result } from 'result-interface';
+import { result, error } from 'result-interface';
 import type { Client } from '../../lib/client/types';
 import {
 	parseInvoice,
@@ -180,6 +180,30 @@ describe(getInvoiceJob.name, () => {
 		const { client } = clientSequence(new Response(JSON.stringify(VALID)));
 		expect(await getInvoiceJob(client, 'job-1')).toBeResult(VALID);
 	});
+
+	it('reports pending with no hint when Retry-After is absent', async () => {
+		const { client } = clientSequence(new Response(null, { status: 202 }));
+		expect(await getInvoiceJob(client, 'job-1')).toBeResult({
+			status: 'pending',
+			retryAfterMs: undefined
+		});
+	});
+
+	it('propagates a transport error', async () => {
+		const send = vi.fn().mockResolvedValue(error(new Error('down')));
+		const client: Client = { options: { token: 't' }, routes: [], request: send };
+		expect(await getInvoiceJob(client, 'job-1')).toBeError();
+	});
+
+	it('ignores an unparseable Retry-After', async () => {
+		const { client } = clientSequence(
+			new Response(null, { status: 202, headers: { 'Retry-After': 'soon' } })
+		);
+		expect(await getInvoiceJob(client, 'job-1')).toBeResult({
+			status: 'pending',
+			retryAfterMs: undefined
+		});
+	});
 });
 
 describe(parseInvoiceAsync.name, () => {
@@ -200,5 +224,31 @@ describe(parseInvoiceAsync.name, () => {
 			new Response(null, { status: 202, headers: { 'Retry-After': '0' } })
 		);
 		expect(await parseInvoiceAsync(client, PDF(), { maxWaitMs: 0 })).toBeError();
+	});
+
+	it('propagates a submit error', async () => {
+		const send = vi.fn().mockResolvedValue(error(new Error('down')));
+		const client: Client = { options: { token: 't' }, routes: [], request: send };
+		expect(await parseInvoiceAsync(client, PDF())).toBeError();
+	});
+
+	it('propagates a poll error', async () => {
+		const send = vi
+			.fn()
+			.mockResolvedValueOnce(
+				result(new Response(JSON.stringify({ job_id: 'job-1' }), { status: 202 }))
+			)
+			.mockResolvedValueOnce(error(new Error('down')));
+		const client: Client = { options: { token: 't' }, routes: [], request: send };
+		expect(await parseInvoiceAsync(client, PDF())).toBeError();
+	});
+
+	it('falls back to the default poll interval when no hint is given', async () => {
+		const { client } = clientSequence(
+			new Response(JSON.stringify({ job_id: 'job-1' }), { status: 202 }),
+			new Response(null, { status: 202 }),
+			new Response(JSON.stringify(VALID))
+		);
+		expect(await parseInvoiceAsync(client, PDF(), { maxWaitMs: 100 })).toBeResult(VALID);
 	});
 });

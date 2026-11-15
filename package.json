@@ -1,6 +1,6 @@
 {
 	"name": "@vatmiraal/vatmiraal-sdk",
-	"version": "0.3.3",
+	"version": "0.4.0",
 	"description": "TypeScript and JavaScript client SDK for the VATmiraal API.",
 	"author": "VATmiraal BV",
 	"license": "Apache-2.0",
@@ -34,7 +34,7 @@
 	"scripts": {
 		"build": "tsup",
 		"typecheck": "tsc --noEmit",
-		"test": "vitest run",
+		"test": "vitest run --coverage",
 		"test:watch": "vitest",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
